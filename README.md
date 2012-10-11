@@ -1,4 +1,3 @@
-LOLAI-Arena
-===========
+This is a framework for making bots compete against each other in a number of games.
 
-This is an arena to make several bots fight each other
+The first game is a classic prisonner's dilema. 3 trivial bots are given in example.
