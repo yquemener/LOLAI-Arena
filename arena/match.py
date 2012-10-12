@@ -12,12 +12,13 @@ ROUND_TIMEOUT = 0.01
 
 
 class Match(threading.Thread):
-    def __init__(self, bots):
+    def __init__(self, bots, manche = 50):
         """ Initialise l'arene
         bots doit contenir la liste des bots (nom du programme) qui vont s'affronter
 
         arguments: bots"""
         self.import_bots(bots)
+        self.manche = manche
         self.scores = [0]*len(bots)
         self.error=0
         threading.Thread.__init__(self)
@@ -97,12 +98,29 @@ class Match(threading.Thread):
         self.feu()
 
         # On boucle le jeu pendant 50 tours
-        for k in range(50):
+        for k in range(self.manche):
             self.partez()
 
         # Message de fin de jeu
         self.p[0].stdin.write("Q\n")
         self.p[1].stdin.write("Q\n")
+
+        self.det_winner()
+
+    def det_winner(self):
+        """Detrmine qui est le gagnant"""
+        # On doit pouvoir faire mieux pour récuperer l'index du gagnant avec un l.index(max(l)).
+        # Mais ya un soucis avec le cas d'égalité
+        if(match.scores[1]>match.scores[0]):
+            self.winner = "{winner} win!".format(winner = self.bots[1])
+        elif(match.scores[1]<match.scores[0]):
+            self.winner = "{winner} win!".format(winner = self.bots[0])
+        else:
+            self.winner = "Draw"
+
+    def give_results(self):
+        """Renvoie sous forme de dictionnaire les statistiques du match"""
+        return {bots : self.bots, scores : self.scores, winner : self.winner}
 
 
 
@@ -123,11 +141,7 @@ if __name__ == '__main__':
                 print "Failed to answer in time"
             else:
                 print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(match.scores))
-                if(match.scores[1]>match.scores[0]):
-                    print "{b2} wins\n".format(b2 = b2)
-                elif(match.scores[1]<match.scores[0]):
-                    print "{b1} wins\n".format(b1 = b1)
-                else:
-                    print "Draw\n"
+                match.det_winner()
+                print match.winner
 
 
