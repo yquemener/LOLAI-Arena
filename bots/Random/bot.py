@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+#-*- coding:utf8-*-  
 from random import *
 from time import *
 import sys
