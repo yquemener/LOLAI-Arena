@@ -1,5 +1,8 @@
 *.py[co]
 
+# Backup vim
+*.swp
+
 # Packages
 *.egg
 *.egg-info
@@ -25,3 +28,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# Résultat de la partie
+arena/results.html
