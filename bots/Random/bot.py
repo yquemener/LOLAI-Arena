@@ -6,4 +6,4 @@ seed(time())
 
 print "OK"
 while raw_input()!='Q':
-    print choice(['C','T'])
+    print choice(['C','T']) 
