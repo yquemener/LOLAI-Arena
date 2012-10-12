@@ -65,17 +65,17 @@ class Match(threading.Thread):
 
         # On determine le gagnant
         if r1=="C" and r2=="C":
-            self.score[0]+=5
-            self.score[1]+=5
+            self.scores[0]+=5
+            self.scores[1]+=5
         elif r1=="C" and r2=="T":
-            self.score[0]+=0
-            self.score[1]+=10
+            self.scores[0]+=0
+            self.scores[1]+=10
         elif r1=="T" and r2=="C":
-            self.score[0]+=10
-            self.score[1]+=0
+            self.scores[0]+=10
+            self.scores[1]+=0
         elif r1=="T" and r2=="T":
-            self.score[0]+=1
-            self.score[1]+=1
+            self.scores[0]+=1
+            self.scores[1]+=1
         else:
             raise ValueError("Les réponses ne correspondent pas à la question... Voila ce qu'on me demande de traiter: r1= {r1}, r2 = {r2}".format(r1 = r1, r2 = r2))
 
@@ -114,15 +114,20 @@ if __name__ == '__main__':
     c1 = bots[0]
     c2 = bots[1]
 
-    match = Match([c1,c2])
-    match.start()
-    match.join(ROUND_TIMEOUT*200)
-    if match.isAlive():
-        print "Failed to answer in time"
-    else:
-        if(match.scores[1]>match.scores[0]):
-            print c2+" victorious<br>"+str(match.scores)
-        elif(match.scores[1]<match.scores[0]):
-            print c1+" victorious<br>"+str(match.scores)
+    for b1 in bots:
+        for b2 in bots:
+            match = Match([b1,b2])
+            match.start()
+            match.join(ROUND_TIMEOUT*200)
+            if match.isAlive():
+                print "Failed to answer in time"
+            else:
+                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(match.scores))
+                if(match.scores[1]>match.scores[0]):
+                    print "{b2} wins\n".format(b2 = b2)
+                elif(match.scores[1]<match.scores[0]):
+                    print "{b1} wins\n".format(b1 = b1)
+                else:
+                    print "Draw\n"
 
 
