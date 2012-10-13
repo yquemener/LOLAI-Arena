@@ -111,19 +111,21 @@ class Match(threading.Thread):
         """Detrmine qui est le gagnant"""
         # On doit pouvoir faire mieux pour récuperer l'index du gagnant avec un l.index(max(l)).
         # Mais ya un soucis avec le cas d'égalité
-        if(match.scores[1]>match.scores[0]):
-            self.winner = "{winner} win!".format(winner = self.bots[1])
-        elif(match.scores[1]<match.scores[0]):
-            self.winner = "{winner} win!".format(winner = self.bots[0])
+        if(self.scores[1]>self.scores[0]):
+            self.winner = "{winner} wins!".format(winner = self.bots[1])
+        elif(self.scores[1]<self.scores[0]):
+            self.winner = "{winner} wins!".format(winner = self.bots[0])
         else:
             self.winner = "Draw"
 
     def give_results(self):
         """Renvoie sous forme de dictionnaire les statistiques du match"""
-        return {bots : self.bots, scores : self.scores, winner : self.winner}
+        self.det_winner()
+        return {'bots' : self.bots, 'scores' : self.scores, 'winner' : self.winner}
 
 
-
+# ----------------------
+# Code activé quand on appelle directement match.py
 
 if __name__ == '__main__':
 
