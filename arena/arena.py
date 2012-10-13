@@ -35,9 +35,7 @@ def arena():
 def vs():
     """ Page résumé du jeu qui vient de se dérouler """
     bots = [request.forms.get('player1'),request.forms.get('player2')]
-    print request.forms.keys()
     manche = int(request.forms.get('manche'))
-    print manche
     match = Match(bots, manche)
     match.start()
     match.join(ROUND_TIMEOUT*200)
