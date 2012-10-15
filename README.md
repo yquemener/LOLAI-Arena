@@ -5,7 +5,8 @@ The first game is a classic prisonner's dilema. 3 trivial bots are given in exam
 Usage
 =====
 
-    python arena/arena.py
+    cd arena
+    python arena.py
 
 Then go to http://localhost:8080/arena with your webbrowser and run games.
 
