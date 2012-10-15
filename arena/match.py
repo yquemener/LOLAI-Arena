@@ -60,7 +60,7 @@ class Match(threading.Thread):
         Fait jouer une partie du jeu des prisonniers
     
         arguments: """
-        # Lecteur du choix des bots
+        # Lecture du choix des bots
         r1 = self.p[0].stdout.readline().rstrip()
         r2 = self.p[1].stdout.readline().rstrip()
 
@@ -95,10 +95,12 @@ class Match(threading.Thread):
                                          stdout=subprocess.PIPE,
                                          cwd=os.path.abspath(BOTS_PATH+self.bots[1]+"/")))
         self.pret()
-        self.feu()
 
         # On boucle le jeu pendant 50 tours
         for k in range(self.manche):
+            # On envoie le signal aux bots qu'ils se préparent
+            self.feu()
+            # Ils envoient leur résultat et on analyse
             self.partez()
 
         # Message de fin de jeu
