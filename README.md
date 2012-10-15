@@ -5,8 +5,8 @@ The first game is a classic prisonner's dilema. 3 trivial bots are given in exam
 Usage
 =====
 
-    python arena.py
+    python arena/arena.py
 
-It will create a results.html that displays the results of the match.
+Then go to http://localhost:8080/arena with your webbrowser and run games.
 
 To create a bot, make a subdirectory in bots/ and follow the instructions in doc/protocol and add it in the list named 'bots' at the begining of arena.py
