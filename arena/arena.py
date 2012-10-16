@@ -1,95 +1,58 @@
-import os
-import threading
-import subprocess
+#!/usr/bin/env python
+#-*- coding:utf8-*-
 
-from time import *
+# ------------------------------
+# Imports
+from bottle import route, run, view, post, request
+from match import Match
+
+import os
+
+
+# ------------------------------
+# Bricolages temporaire
 
 BOTS_PATH = "../bots/"
+def liste_bot():
+    """Liste les bot disponibles"""
+    # C'est vraiment pas top de le faire comme ça, faudra faire des tests pour être sûr que c'est bien un bot et pas un fichier égaré!
+    return os.listdir(BOTS_PATH)
+
+
+# ------------------------------
+# Les pages visibles
 ROUND_TIMEOUT = 0.01
 
-bots = ["AlwaysT", "AlwaysC", "Random"]
-#bots = ["Random"]
+@route('/arena')
+@view('template/arena.tpl')
+def arena():
+    """ Page des arènes de LoL on y voit les jeux proposés et leurs paramètres """
+    context = {'bots' : liste_bot()}
+    return context
 
-class Match(threading.Thread):
-    def __init__(self, c1, c2):
-        self.bot1 = c1
-        self.bot2 = c2
-        self.scores=[0,0]
-        self.error=0
-        threading.Thread.__init__(self)
+@route('/vs' , method='POST')
+@view('template/vs.tpl')
+def vs():
+    """ Page résumé du jeu qui vient de se dérouler """
+    bots = [request.forms.get('player1'),request.forms.get('player2')]
+    manche = int(request.forms.get('manche'))
+    match = Match(bots, manche)
+    match.start()
+    match.join(ROUND_TIMEOUT*200)
+    context = match.give_results()
+    return context
 
-    def run(self):
-        score1 = 0
-        score2 = 0
-        p1 = subprocess.Popen("./start", stdin=subprocess.PIPE,
-                                         stdout=subprocess.PIPE,
-                                         cwd=os.path.abspath(BOTS_PATH+self.bot1+"/"))
-        p2 = subprocess.Popen("./start", stdin=subprocess.PIPE,
-                                         stdout=subprocess.PIPE,
-                                         cwd=os.path.abspath(BOTS_PATH+self.bot2+"/"))
-        if p1.stdout.readline()!="OK\n":
-            self.error = 1
-            return
-        if p2.stdout.readline()!="OK\n":
-            self.error=2
-            return
-        p1.stdin.write("A\n")
-        p2.stdin.write("A\n")
-        for k in range(50):
-            r1 = p1.stdout.readline().rstrip()
-            r2 = p2.stdout.readline().rstrip()
-            if r1=="C" and r2=="C":
-                score1+=5
-                score2+=5
-            if r1=="C" and r2=="T":
-                score1+=0
-                score2+=10
-            if r1=="T" and r2=="C":
-                score1+=10
-                score2+=0
-            if r1=="T" and r2=="T":
-                score1+=1
-                score2+=1
+# ------------------------------
+# Quand le fichier est directement lancé
 
-            p1.stdin.write(r2+'\n')
-            p2.stdin.write(r1+'\n')
-        p1.stdin.write("Q\n")
-        p2.stdin.write("Q\n")
-        self.scores=[score1, score2]
+if __name__ == '__main__':
+    run(host='localhost', port=8080, reloader = True)
 
+# ------------------------------
+# Fin du programme
 
-contenders=list()
+# -----------------------------
+# Reglages pour 'vim'
+# vim:set autoindent expandtab tabstop=4 shiftwidth=4:
+# cursor: 16 del 
 
-for c in bots:
-    if not os.path.exists(BOTS_PATH+c):
-        print "Error, could not find bot '"+c+"'. Ignoring"
-    else:
-        contenders.append(c)
-
-html='<html><body><table style="">'
-for c1 in contenders:
-    html+="\n\t<TR>"
-    for c2 in contenders:
-        html+='\n\t\t<TD style="border-style:dotted;border-width:1px;"><div style="text-align:center">'
-        print "Match "+c1+" vs "+c2
-        mat = Match(c1,c2)
-        mat.start()
-        mat.join(ROUND_TIMEOUT*200)
-        if mat.isAlive():
-            print "Failed to answer in time"
-            html+="Failed to return"
-        else:
-            if(mat.scores[1]>mat.scores[0]):
-                html+=c2+" victorious<br>"+str(mat.scores)
-            elif(mat.scores[1]<mat.scores[0]):
-                html+=c1+" victorious<br>"+str(mat.scores)
-            else:
-                html+="Draw<br>"+str(mat.scores)
-            print mat.scores
-        html+="</div></td>"
-    html+="</tr>"
-html+="</table></html>"
-html_file=open("results.html","w")
-html_file.write(html)
-html_file.close()
-print "That's all folks"
