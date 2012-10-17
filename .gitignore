@@ -3,6 +3,9 @@
 # Backup vim
 *.swp
 
+# Backup autres
+*~
+
 # Packages
 *.egg
 *.egg-info
