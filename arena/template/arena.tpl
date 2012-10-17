@@ -6,7 +6,7 @@
 <h1> LoL Arena </h1>
 <h2> Jeu du prisonnier </h2>
 <form action="/vs" method="post">
-<p> Nombre de maches 
+<p> Nombre de manches 
     <input type="text" name="manche" value='50'></br>
     Joueur 1:
     % for b in bots:
