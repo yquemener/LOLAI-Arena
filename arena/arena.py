@@ -23,6 +23,7 @@ def liste_bot():
 # Les pages visibles
 ROUND_TIMEOUT = 0.01
 
+@route('/')
 @route('/arena')
 @view('template/arena.tpl')
 def arena():
