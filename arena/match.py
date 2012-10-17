@@ -32,7 +32,7 @@ class Match(threading.Thread):
             if not os.path.exists(BOTS_PATH+b):
                 raise ValueError("Could not find bot '{bot}'".format(bot = b))
             else:
-                self.bots.append(b)
+                self.bots.append(bot.Bot(b))
 
     def pret(self):
         """Description de pret

@@ -12,8 +12,25 @@
 class Bot(object):
     """ Bot class """
     def __init__(self, name):
-        self.name = name
+        """ Initiate bot class
+
+        @param name: the name of the bot (which correspond to the name of the folder)
+
+        """
+        self.check_name(name)
         
+    def check_name(self, name):
+        """Description of check_name
+        Check if the name correspond to a folder containing program
+    
+        @param name
+        
+        """
+        if not os.path.exists(BOTS_PATH+b):
+            raise ValueError("Could not find bot '{bot}'".format(bot = b))
+        else:
+            self.bots.append(bot.Bot(b))
+
     def start_proc(self):
         """ Start the subprocess associated to the bot """
         self.proc = subprocess.Popen("./start", stdin=subprocess.PIPE, stdout=subprocess.PIPE,cwd=os.path.abspath(BOTS_PATH+self.bots[0]+"/")))
