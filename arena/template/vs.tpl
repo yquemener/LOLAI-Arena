@@ -5,10 +5,10 @@
 <body>
 <h1> LoL Arena </h1>
 
-<h2> {{" vs ".join(bots)}} </h2>
+<h2> {{" vs ".join([b.name for b in bots])}} </h2>
 <p> Résultat: </br>
-%for (i,b) in enumerate(bots):
-    {{b}} : {{scores[i]}}
+%for b in bots:
+    {{b.name}} : {{b.score}}
 %end
 <center> {{winner}} </center>
 </p>

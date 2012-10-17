@@ -4,10 +4,14 @@
 # ------------------------------
 # Imports
 # ------------------------------ 
+import os
+import subprocess
+
 
 # ------------------------------
 # Classes
 # ------------------------------ 
+BOTS_PATH = "../bots/"
 
 class Bot(object):
     """ Bot class """
@@ -18,22 +22,26 @@ class Bot(object):
 
         """
         self.check_name(name)
+        self.score = 0
         
     def check_name(self, name):
         """Description of check_name
+
         Check if the name correspond to a folder containing program
     
         @param name
         
         """
-        if not os.path.exists(BOTS_PATH+b):
-            raise ValueError("Could not find bot '{bot}'".format(bot = b))
+        if not os.path.exists(BOTS_PATH+name):
+            raise ValueError("Could not find bot '{bot}'".format(bot = name))
         else:
-            self.bots.append(bot.Bot(b))
+            self.name = name
 
-    def start_proc(self):
+    def start_bot(self):
         """ Start the subprocess associated to the bot """
-        self.proc = subprocess.Popen("./start", stdin=subprocess.PIPE, stdout=subprocess.PIPE,cwd=os.path.abspath(BOTS_PATH+self.bots[0]+"/")))
+        self.proc = subprocess.Popen("./start", stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                cwd=os.path.abspath(BOTS_PATH+self.name+"/"))
 
     def ready(self):
         """ Check if the bot is ready to play """
@@ -42,15 +50,25 @@ class Bot(object):
 
     def steady(self):
         """ Annonce the beggining of the round """
-        self.proc.stdin.write("A\n")
+        self.send_msg("A\n")
 
     def end_game(self):
         """ Annonce the end of the game """
-        self.proc.stdin.write("Q\n")
+        self.send_msg("Q\n")
+
+    def send_msg(self, msg):
+        """Description of send_msg
+        
+        Send message to the bot
+    
+        @param msg: the message to send
+        
+        """
+        self.proc.stdin.write(msg)
 
     def get_ans(self):
         """ Get the answer of the bot """
-        pass
+        return self.proc.stdout.readline().rstrip()
 
 
 # ------------------------------
