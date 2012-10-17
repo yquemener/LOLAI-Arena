@@ -10,29 +10,29 @@
 # ------------------------------ 
 
 class Bot(object):
-    """Classe représentant un bot"""
+    """ Bot class """
     def __init__(self, name):
         self.name = name
         
     def start_proc(self):
-        """Démmare le processus asocié à ce bot"""
+        """ Start the subprocess associated to the bot """
         self.proc = subprocess.Popen("./start", stdin=subprocess.PIPE, stdout=subprocess.PIPE,cwd=os.path.abspath(BOTS_PATH+self.bots[0]+"/")))
 
-    def pres(self):
-        """Lance le message pour dire au bot de se préparer"""
+    def ready(self):
+        """ Check if the bot is ready to play """
         if self.proc.stdout.readline()!="OK\n":
             raise ValueError("Le bot {bot} n'arrive pas à ce préparer".format(bot = self.name))
 
-    def feu(self):
-        """ Anonce le début du match"""
+    def steady(self):
+        """ Annonce the beggining of the round """
         self.proc.stdin.write("A\n")
 
-    def stop(self):
-        """Anonce la fin du match"""
+    def end_game(self):
+        """ Annonce the end of the game """
         self.proc.stdin.write("Q\n")
 
     def get_ans(self):
-        """Récupère la réponse du bot"""
+        """ Get the answer of the bot """
         pass
 
 
