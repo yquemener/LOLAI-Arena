@@ -19,6 +19,9 @@
     %end
     </br>
     <input type="submit" value="Jouer le match">
+</form>
 </p>
-    
+<form action="/vsall" method="post">
+    <input type="submit" value="Jouer toutes les combinaisons">
+</form>
 </body>

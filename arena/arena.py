@@ -43,6 +43,32 @@ def vs():
     context = match.give_results()
     return context
 
+@route('/vsall', method='POST')
+def vsall():
+    """ Tableau de résultat de tous les matchs"""
+    # Idéalement, ca devrait etre un template mais j'ai juste recopie mon vieux code pour faire vite
+    html='<html><body><table style="">'
+    contenders = liste_bot()
+    for c1 in contenders:
+        html+="\n\t<TR>"
+        for c2 in contenders:
+            html+='\n\t\t<TD style="border-style:dotted;border-width:1px;"><div style="text-align:center">'
+            mat = Match((c1,c2))
+            mat.start()
+            mat.join(ROUND_TIMEOUT*200)
+            if mat.isAlive():
+                html+="Failed to return"
+            else:
+                if(mat.scores[1]>mat.scores[0]):
+                    html+=c2+" victorious<br>"+str(mat.scores)
+                elif(mat.scores[1]<mat.scores[0]):
+                    html+=c1+" victorious<br>"+str(mat.scores)
+                else:
+                    html+="Draw<br>"+str(mat.scores)
+            html+="</div></td>"
+        html+="</tr>"
+    html+="</table></html>"
+    return html
 # ------------------------------
 # Quand le fichier est directement lancé
 
