@@ -2,14 +2,14 @@
 #-*- coding:utf8-*-
     
 import threading
-import bot
+from bot import Bot
 
 from time import *
 
 ROUND_TIMEOUT = 0.01
 
 
-class Match(threading.Thread):
+class Game(threading.Thread):
     def __init__(self, bots, round = 50):
         """ Initialization of the game
 
@@ -20,7 +20,6 @@ class Match(threading.Thread):
 
         self.import_bots(bots)
         self.round = round
-        self.scores = [0]*len(bots)
         self.error=0
         threading.Thread.__init__(self)
 
@@ -33,7 +32,7 @@ class Match(threading.Thread):
         """
         self.bots = list()
         for b in bots:
-            self.bots.append(bot.Bot(b))
+            self.bots.append(Bot(b))
 
     def start_bots(self):
         """Description of start_bots
@@ -148,14 +147,14 @@ if __name__ == '__main__':
 
     for b1 in bots:
         for b2 in bots:
-            match = Match([b1,b2])
-            match.start()
-            match.join(ROUND_TIMEOUT*200)
-            if match.isAlive():
+            game = Game([b1,b2])
+            game.start()
+            game.join(ROUND_TIMEOUT*200)
+            if game.isAlive():
                 print "Failed to answer in time"
             else:
-                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(match.scores))
-                match.det_winner()
-                print match.winner
+                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(game.scores))
+                game.det_winner()
+                print game.winner
 
 
