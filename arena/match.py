@@ -1,133 +1,143 @@
 #!/usr/bin/env python2
 #-*- coding:utf8-*-
     
-import os
 import threading
-import subprocess
+import bot
 
 from time import *
 
-BOTS_PATH = "../bots/"
 ROUND_TIMEOUT = 0.01
 
 
 class Match(threading.Thread):
-    def __init__(self, bots, manche = 50):
-        """ Initialise l'arene
-        bots doit contenir la liste des bots (nom du programme) qui vont s'affronter
+    def __init__(self, bots, round = 50):
+        """ Initialization of the game
 
-        arguments: bots"""
+        @param bots: list of bots
+        @param round: number of round
+
+        """
+
         self.import_bots(bots)
-        self.manche = manche
+        self.round = round
         self.scores = [0]*len(bots)
         self.error=0
         threading.Thread.__init__(self)
 
     def import_bots(self, bots):
-        """Description de import_bots
-        Verifie que les noms des bots correspondent bien a des programmes
-        arguments: bots"""
+        """Description of import_bots
+        Check if bot's name correspond to files
+
+        @param bots: list of bots
+
+        """
         self.bots = list()
         for b in bots:
-            if not os.path.exists(BOTS_PATH+b):
-                raise ValueError("Could not find bot '{bot}'".format(bot = b))
-            else:
-                self.bots.append(b)
+            self.bots.append(bot.Bot(b))
 
-    def pret(self):
-        """Description de pret
-        Verifie que les joueurs sont prèts
+    def start_bots(self):
+        """Description of start_bots
+
+        Start subprocess associated to bots
     
-        arguments: arg"""
-        if self.p[0].stdout.readline()!="OK\n":
-            # Pas très joli tout ça!
-            # Faut changer le nom de l'erreur
-            # et géré le cas où il y aura plus de joueurs
-            raise ValueError("Le bot {bot} n'arrive pas à ce préparer".format(bot = self.bots[0]))
-        if self.p[1].stdout.readline()!="OK\n":
-            raise ValueError("Le bot {bot} n'arrive pas à ce préparer".format(bot = self.bots[1]))
+        """
+        for b in self.bots:
+            b.start_bot()
 
-    def feu(self):
-        """Description de feu
-        Envoie aux bots le message de depart
+    def ready(self):
+        """Description of ready
+
+        Check if bots are ready
     
-        arguments: arg"""
-        self.p[0].stdin.write("A\n")
-        self.p[1].stdin.write("A\n")
+        """
+        for b in self.bots:
+            b.ready()
 
-    def partez(self):
-        """Description de partez
-        Fait jouer une partie du jeu des prisonniers
+    def steady(self):
+        """Description of steady
+
+        Send to bots the new round message
     
-        arguments: """
-        # Lecture du choix des bots
-        r1 = self.p[0].stdout.readline().rstrip()
-        r2 = self.p[1].stdout.readline().rstrip()
+        """
+        for b in self.bots:
+            b.steady()
 
-        # On determine le gagnant
+    def end_game(self):
+        """Description of end_game
+    
+        Send end of game message to bots
+        
+        """
+        for b in self.bots:
+            b.end_game()
+
+    def go(self):
+        """Description of go
+
+        Rules of the game
+    
+        """
+        # Reading bots choices
+        r1 = self.bots[0].get_ans()
+        r2 = self.bots[1].get_ans()
+
+        # Who wins
         if r1=="C" and r2=="C":
-            self.scores[0]+=5
-            self.scores[1]+=5
+            self.bots[0].score+=5
+            self.bots[1].score+=5
         elif r1=="C" and r2=="T":
-            self.scores[0]+=0
-            self.scores[1]+=10
+            self.bots[0].score+=0
+            self.bots[1].score+=10
         elif r1=="T" and r2=="C":
-            self.scores[0]+=10
-            self.scores[1]+=0
+            self.bots[0].score+=10
+            self.bots[1].score+=0
         elif r1=="T" and r2=="T":
-            self.scores[0]+=1
-            self.scores[1]+=1
+            self.bots[0].score+=1
+            self.bots[1].score+=1
         else:
-            raise ValueError("Les réponses ne correspondent pas à la question... Voila ce qu'on me demande de traiter: r1= {r1}, r2 = {r2}".format(r1 = r1, r2 = r2))
+            raise ValueError("Your answer doesn't correspond to the game:  r1= {r1}, r2 = {r2}".format(r1 = r1, r2 = r2))
 
-        # Envoie de la reponse des autres
-        self.p[0].stdin.write(r2+'\n')
-        self.p[1].stdin.write(r1+'\n')
+        # Send results to other bots
+        self.bots[0].send_msg(r2+'\n')
+        self.bots[1].send_msg(r1+'\n')
 
     def run(self):
-        """ Boucle principale qui va faire affronter les bots """
-        self.p = list()
+        """ Process of the game """
+        self.start_bots()
 
-        self.p.append(subprocess.Popen("./start", stdin=subprocess.PIPE,
-                                         stdout=subprocess.PIPE,
-                                         cwd=os.path.abspath(BOTS_PATH+self.bots[0]+"/")))
-        self.p.append(subprocess.Popen("./start", stdin=subprocess.PIPE,
-                                         stdout=subprocess.PIPE,
-                                         cwd=os.path.abspath(BOTS_PATH+self.bots[1]+"/")))
-        self.pret()
+        self.ready()
 
-        # On boucle le jeu pendant 50 tours
-        for k in range(self.manche):
-            # On envoie le signal aux bots qu'ils se préparent
-            self.feu()
-            # Ils envoient leur résultat et on analyse
-            self.partez()
+        # loop rounds
+        for k in range(self.round):
+            # Send to bots steady message
+            self.steady()
+            # Rules of the game
+            self.go()
 
-        # Message de fin de jeu
-        self.p[0].stdin.write("Q\n")
-        self.p[1].stdin.write("Q\n")
+        # End game message
+        self.end_game()
 
         self.det_winner()
 
     def det_winner(self):
-        """Detrmine qui est le gagnant"""
+        """ Choose the winner """
         # On doit pouvoir faire mieux pour récuperer l'index du gagnant avec un l.index(max(l)).
         # Mais ya un soucis avec le cas d'égalité
-        if(self.scores[1]>self.scores[0]):
-            self.winner = "{winner} wins!".format(winner = self.bots[1])
-        elif(self.scores[1]<self.scores[0]):
-            self.winner = "{winner} wins!".format(winner = self.bots[0])
+        if (self.bots[1].score > self.bots[0].score):
+            self.winner = "{winner} wins!".format(winner = self.bots[1].name)
+        elif (self.bots[1].score < self.bots[0].score):
+            self.winner = "{winner} wins!".format(winner = self.bots[0].name)
         else:
             self.winner = "Draw"
 
     def give_results(self):
-        """Renvoie sous forme de dictionnaire les statistiques du match"""
+        """ Give the sum up of the game"""
         self.det_winner()
-        return {'bots' : self.bots, 'scores' : self.scores, 'winner' : self.winner}
+        return {'bots' : self.bots, 'winner' : self.winner}
 
 
 # ----------------------
-# Code activé quand on appelle directement match.py
+# What is run in this file
 
 if __name__ == '__main__':
 
