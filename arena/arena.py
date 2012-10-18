@@ -14,7 +14,7 @@ import os
 
 BOTS_PATH = "../bots/"
 def list_bot():
-    """ List avialable bots"""
+    """ List available bots"""
     # C'est vraiment pas top de le faire comme ça, faudra faire des tests pour être sûr que c'est bien un bot et pas un fichier égaré!
     return os.listdir(BOTS_PATH)
 
@@ -49,7 +49,7 @@ def vsall():
     """ Tableau de résultat de tous les matchs"""
     # Idéalement, ca devrait etre un template mais j'ai juste recopie mon vieux code pour faire vite
     html='<html><body><table style="">'
-    contenders = liste_bot()
+    contenders = list_bot()
     scores = dict()
     for c in contenders:
         scores[c]=0
@@ -67,16 +67,17 @@ def vsall():
             mat = Match((c1,c2))
             mat.start()
             mat.join(ROUND_TIMEOUT*200)
+            bots = mat.give_results()["bots"]
             if mat.isAlive():
                 html+="Failed to return"
             else:
-                if(mat.scores[1]>mat.scores[0]):
-                    html+=c2+" victorious<br>"+str(mat.scores)
-                elif(mat.scores[1]<mat.scores[0]):
-                    html+=c1+" victorious<br>"+str(mat.scores)
+                if(bots[1].score>bots[0].score):
+                    html+=c2+" victorious<br>"+str(bots[1].score)
+                elif(bots[1].score<bots[0].score):
+                    html+=c1+" victorious<br>"+str(bots[0].score)
                 else:
-                    html+="Draw<br>"+str(mat.scores)
-                scores[c1]+=mat.scores[0]
+                    html+="Draw<br>"+str((bots[0].score,bots[1].score))
+                scores[c1]+=bots[0].score
             html+="</div></td>"
         html+='<td style="border-style:dotted;border-width:1px;">'
         html+= str(scores[c1])
