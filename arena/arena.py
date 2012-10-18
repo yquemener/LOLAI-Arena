@@ -49,8 +49,18 @@ def vsall():
     # Idéalement, ca devrait etre un template mais j'ai juste recopie mon vieux code pour faire vite
     html='<html><body><table style="">'
     contenders = liste_bot()
+    scores = dict()
+    for c in contenders:
+        scores[c]=0
+    html+='<tr><td style="border-style:dotted;border-width:1px;">\</td>'
+    for c2 in contenders:
+        html+='\n\t\t<TD style="border-style:dotted;border-width:1px;"><div style="text-align:center">'
+        html+=c2+"</div></td>"
+    html+="<td>Score final</td></tr>"
     for c1 in contenders:
         html+="\n\t<TR>"
+        html+='\n\t\t<TD style="border-style:dotted;border-width:1px;"><div style="text-align:center">'
+        html+=c1+"</div></td>"
         for c2 in contenders:
             html+='\n\t\t<TD style="border-style:dotted;border-width:1px;"><div style="text-align:center">'
             mat = Match((c1,c2))
@@ -65,7 +75,11 @@ def vsall():
                     html+=c1+" victorious<br>"+str(mat.scores)
                 else:
                     html+="Draw<br>"+str(mat.scores)
+                scores[c1]+=mat.scores[0]
             html+="</div></td>"
+        html+='<td style="border-style:dotted;border-width:1px;">'
+        html+= str(scores[c1])
+        html+='</td>'
         html+="</tr>"
     html+="</table></html>"
     return html
