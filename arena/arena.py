@@ -72,9 +72,9 @@ def vsall():
                 html+="Failed to return"
             else:
                 if(bots[1].score>bots[0].score):
-                    html+=c2+" victorious<br>"+str(bots[1].score)
+                    html+=c2+" victorious<br>"+str((bots[0].score,bots[1].score))
                 elif(bots[1].score<bots[0].score):
-                    html+=c1+" victorious<br>"+str(bots[0].score)
+                    html+=c1+" victorious<br>"+str((bots[0].score,bots[1].score))
                 else:
                     html+="Draw<br>"+str((bots[0].score,bots[1].score))
                 scores[c1]+=bots[0].score
