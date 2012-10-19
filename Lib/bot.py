@@ -11,7 +11,7 @@ import subprocess
 # ------------------------------
 # Classes
 # ------------------------------ 
-BOTS_PATH = "../bots/"
+BOTS_PATH = "Games/Prisonnier/bots/"
 
 class Bot(object):
     """ Bot class """

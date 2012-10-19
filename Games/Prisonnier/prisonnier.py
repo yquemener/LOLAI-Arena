@@ -9,9 +9,9 @@ from time import *
 ROUND_TIMEOUT = 0.01
 
 
-class Game(threading.Thread):
+class Prisonnier(threading.Thread):
     def __init__(self, bots, round = 50):
-        """ Initialization of the game
+        """ Initialization of the prisonnier
 
         @param bots: list of bots
         @param round: number of round
@@ -147,14 +147,14 @@ if __name__ == '__main__':
 
     for b1 in bots:
         for b2 in bots:
-            game = Game([b1,b2])
-            game.start()
-            game.join(ROUND_TIMEOUT*200)
-            if game.isAlive():
+            prisonnier = Prisonnier([b1,b2])
+            prisonnier.start()
+            prisonnier.join(ROUND_TIMEOUT*200)
+            if prisonnier.isAlive():
                 print "Failed to answer in time"
             else:
-                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(game.scores))
-                game.det_winner()
-                print game.winner
+                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(prisonnier.scores))
+                prisonnier.det_winner()
+                print prisonnier.winner
 
 
