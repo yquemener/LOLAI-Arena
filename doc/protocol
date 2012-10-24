@@ -6,15 +6,8 @@ Bots must use these channels without buffering<
     In python, you can do that by either flushing stdout after each print or starting the interpreter with the -u flag
 
 Bots must print "OK" after initializing then wait for an input.
-If the input is "A", the bot must play the first round.
 
-Subsequent input will be in the form "T 15 26"
-    The first character is the last choice of the opponent
-    The second number is the current score of the bot
-    The third number is the sum of the scores
-
-A bot must output a single character and a new line ("\n") at each round. The character is "C" for "cooperate" and "T" for "betray"
-An input of "Q" indicates that the run is finished and the bot must exit.
-
-Bots must be in their own subdirectory in the directory bots/
+Bots must be in their own subdirectory in the directory Games/{game name}/bots/
 Their directory must contain an executable file named 'start', launching the bot.
+
+You can get the description of the protocole of each game in Games/{game name}/doc/bots .
