@@ -5,6 +5,8 @@
 # Imports
 # ------------------------------ 
 import threading
+import os
+
 from bot import Bot
 
 # ------------------------------
@@ -12,7 +14,7 @@ from bot import Bot
 # ------------------------------ 
 
 GAMES_PATH = "Games/"
-GAMES_PATH = "bots/"
+BOTS_PATH = "bots/"
 
 class Game(threading.Thread):
     """ Docstring for Game
@@ -20,21 +22,24 @@ class Game(threading.Thread):
    Meta-class which future games will herites. It defines main caractéristiques of games 
 
     """
-    def __init__(self,name):
+    def __init__(self,name, bots):
         """ Initiate Game 
     
         @param name: Name of the game
         @param folder: folder where the game is
         
         """
-        self.name = name
-        self.folder = GAMES_PATH + self.name
+        self.check_name(name)
+        self.folder = GAMES_PATH + self.game_name
+        self.import_bots(bots)
+
         threading.Thread.__init__(self)
 
     def check_name(self, name):
         """ Docstring of check_name
         
         Check if the name correspond to a folder containing the game
+        And set name, path and bots_path
     
         @param name: name of the game
         
@@ -42,8 +47,8 @@ class Game(threading.Thread):
         if not os.path.exists(GAMES_PATH + name):
             raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + name))
         else:
-            self.name = name
-            self.path = GAMES_PATH + name + "/"
+            self.game_name = name
+            self.path = GAMES_PATH + self.game_name + "/"
             self.bots_path = self.path + BOTS_PATH
 
     def import_bots(self, bots):
@@ -52,9 +57,9 @@ class Game(threading.Thread):
         Import bots which should be in self.bots_path
         
         """
-        self.bots = {} 
+        self.bots = [] 
         for b in bots:
-            self.bots[b] = Bot(b, self.bots)
+            self.bots += [Bot(b, self.bots_path)]
         
     def main(self):
         """ Docstring for main
@@ -76,40 +81,13 @@ class Game(threading.Thread):
     # -------------------
     # Communication with bots
 
-    def send_bot(self, bot, msg):
-        """ Docstring of send_bot
-        
-        Send to the bot a message
-    
-        @param bot: the bot name
-        @param msg: the message string
-        
-        """
-        try:
-            self.bots[bot].send(msg)
-        except Exception, e:
-            raise e
-
-    def get_ans(self, bot):
-        """ Docstring of get_ans
-        
-        Get the answer of the bot
-    
-        @param bot: the bot
-        
-        """
-        try:
-            self.bots[bot].get_ans()
-        except Exception, e:
-            raise e
-
     def start_bots(self):
         """ Docstring for start_bots
         
         Start bots
         
         """
-        for bot in self.bots.values():
+        for bot in self.bots:
             bot.start_bot()
 
     def ready_bots(self):
@@ -118,7 +96,7 @@ class Game(threading.Thread):
         Send the ready message to bots
         
         """
-        for bot in self.bots.values():
+        for bot in self.bots:
             bot.ready()
 
     def end_bots(self):
@@ -127,8 +105,8 @@ class Game(threading.Thread):
         Send the end of the game message to bots
         
         """
-        for bot in self.bots.values():
-            bot.end_game()
+        for bot in self.bots:
+            bot.send_msg("Q\n")
 
 # ------------------------------
 # Bloc principal

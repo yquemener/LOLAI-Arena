@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 #-*- coding:utf8-*-
     
-from bot import Bot
 from game import Game
+from bot import Bot
 
 from time import *
 
@@ -10,6 +10,7 @@ ROUND_TIMEOUT = 0.01
 
 
 class Prisonnier(Game):
+    NAME = "Prisonnier"
     def __init__(self, bots, round = 50):
         """ Initialization of the prisonnier
 
@@ -18,17 +19,18 @@ class Prisonnier(Game):
 
         """
 
-        self.import_bots(bots)
+        Game.__init__(self, Prisonnier.NAME, bots)
         self.round = round
 
-    def steady(self):
-        """Description of steady
+    def steady_bots(self):
+        """Description of steady_bots
 
         Send to bots the new round message
     
         """
         for b in self.bots:
-            b.steady()
+            b.send_msg("A\n")
+
 
     def go(self):
         """Description of go
@@ -36,10 +38,9 @@ class Prisonnier(Game):
         Rules of the game
     
         """
-        ans = {}
         # Reading bots choices
-        for b in self.bots:
-            ans[b] = self.bots[b].get_ans()
+        r1 = self.bots[0].get_ans()
+        r2 = self.bots[1].get_ans()
 
         # Who wins
         if r1=="C" and r2=="C":
@@ -61,21 +62,21 @@ class Prisonnier(Game):
         self.bots[0].send_msg(r2+'\n')
         self.bots[1].send_msg(r1+'\n')
 
-    def main(self):
+    def run(self):
         """ Process of the game """
         self.start_bots()
 
-        self.ready()
+        self.ready_bots()
 
         # loop rounds
         for k in range(self.round):
             # Send to bots steady message
-            self.steady()
+            self.steady_bots()
             # Rules of the game
             self.go()
 
         # End game message
-        self.end_game()
+        self.end_bots()
 
         self.det_winner()
 

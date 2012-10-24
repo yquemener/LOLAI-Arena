@@ -23,7 +23,7 @@ class Bot(object):
         @param bots_path: path where bots are
 
         """
-        self.check_name(name, path)
+        self.check_name(name, bots_path)
         self.score = 0
         
     def check_name(self, name, bots_path):
@@ -35,7 +35,7 @@ class Bot(object):
         @param bots_path: path where bots are
         
         """
-        if not os.path.exists(path+name):
+        if not os.path.exists(bots_path+name):
             raise ValueError("Could not find bot '{bot}'".format(bot = bots_path + name))
         else:
             self.name = name
@@ -48,19 +48,10 @@ class Bot(object):
                 stdout=subprocess.PIPE,
                 cwd=os.path.abspath(self.path))
 
-
     def ready(self):
         """ Check if the bot is ready to play """
         if self.proc.stdout.readline()!="OK\n":
             raise ValueError("Le bot {bot} n'arrive pas à ce préparer".format(bot = self.name))
-
-    def steady(self):
-        """ Annonce the beggining of the round """
-        self.send_msg("A\n")
-
-    def end_game(self):
-        """ Annonce the end of the game """
-        self.send_msg("Q\n")
 
     def send_msg(self, msg):
         """Description of send_msg
