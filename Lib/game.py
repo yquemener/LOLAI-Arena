@@ -61,22 +61,47 @@ class Game(threading.Thread):
         for b in bots:
             self.bots += [Bot(b, self.bots_path)]
         
-    def main(self):
+    def run(self):
         """ Docstring for main
         
         Let the game going on
+        (requiered by threading)
         
         """
-        pass
+        self.init_game()
+        self.run_game()
+        self.end_game()
 
-    def det_winner(self):
-        """ Docstring for det_winner
+    # -------------------
+    # Main step of the game
+
+    def init_game(self):
+        """ Docstring for init_game
         
-        Determine the winner
+        Initialise game
         
         """
-        # Soucis! Tous les jeux ne se terminent pas de la même façon! Certain sont left to die et d'autres se jouent au score!
-        pass
+        self.start_bots()
+        self.ready_bots()
+
+    def run_game(self):
+        """ Docstring for run_game
+        
+        Run the game
+        
+        """
+        pass    
+
+    def end_game(self):
+        """ Docstring for end_game
+        
+        End the game
+        
+        """
+        self.end_bots()
+
+        # Attention non déclaré pour le moment
+        self.det_winner()
 
     # -------------------
     # Communication with bots
@@ -107,6 +132,17 @@ class Game(threading.Thread):
         """
         for bot in self.bots:
             bot.send_msg("Q\n")
+
+    # -------------------
+    # Other methods
+
+    def det_winner(self):
+        """ Docstring for det_winner
+        
+        Choose the winner
+        
+        """
+        pass
 
 # ------------------------------
 # Bloc principal

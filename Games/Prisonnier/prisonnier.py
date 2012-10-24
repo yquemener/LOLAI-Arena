@@ -31,6 +31,16 @@ class Prisonnier(Game):
         for b in self.bots:
             b.send_msg("A\n")
 
+    # -------------------
+    # Main step of the game - adapted to prisonnier
+
+    def run_game(self):
+        """ Process of the game """
+        for k in range(self.round):
+            # Send to bots steady message
+            self.steady_bots()
+            # Rules of the game
+            self.go()
 
     def go(self):
         """Description of go
@@ -42,7 +52,7 @@ class Prisonnier(Game):
         r1 = self.bots[0].get_ans()
         r2 = self.bots[1].get_ans()
 
-        # Who wins
+        # Distribute points
         if r1=="C" and r2=="C":
             self.bots[0].score+=5
             self.bots[1].score+=5
@@ -62,23 +72,6 @@ class Prisonnier(Game):
         self.bots[0].send_msg(r2+'\n')
         self.bots[1].send_msg(r1+'\n')
 
-    def run(self):
-        """ Process of the game """
-        self.start_bots()
-
-        self.ready_bots()
-
-        # loop rounds
-        for k in range(self.round):
-            # Send to bots steady message
-            self.steady_bots()
-            # Rules of the game
-            self.go()
-
-        # End game message
-        self.end_bots()
-
-        self.det_winner()
 
     def det_winner(self):
         """ Choose the winner """
