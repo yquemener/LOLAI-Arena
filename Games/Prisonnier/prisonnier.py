@@ -1,15 +1,15 @@
 #!/usr/bin/env python2
 #-*- coding:utf8-*-
     
-import threading
 from bot import Bot
+from game import Game
 
 from time import *
 
 ROUND_TIMEOUT = 0.01
 
 
-class Prisonnier(threading.Thread):
+class Prisonnier(Game):
     def __init__(self, bots, round = 50):
         """ Initialization of the prisonnier
 
@@ -20,37 +20,6 @@ class Prisonnier(threading.Thread):
 
         self.import_bots(bots)
         self.round = round
-        self.error=0
-        threading.Thread.__init__(self)
-
-    def import_bots(self, bots):
-        """Description of import_bots
-        Check if bot's name correspond to files
-
-        @param bots: list of bots
-
-        """
-        self.bots = list()
-        for b in bots:
-            self.bots.append(Bot(b))
-
-    def start_bots(self):
-        """Description of start_bots
-
-        Start subprocess associated to bots
-    
-        """
-        for b in self.bots:
-            b.start_bot()
-
-    def ready(self):
-        """Description of ready
-
-        Check if bots are ready
-    
-        """
-        for b in self.bots:
-            b.ready()
 
     def steady(self):
         """Description of steady
@@ -61,24 +30,16 @@ class Prisonnier(threading.Thread):
         for b in self.bots:
             b.steady()
 
-    def end_game(self):
-        """Description of end_game
-    
-        Send end of game message to bots
-        
-        """
-        for b in self.bots:
-            b.end_game()
-
     def go(self):
         """Description of go
 
         Rules of the game
     
         """
+        ans = {}
         # Reading bots choices
-        r1 = self.bots[0].get_ans()
-        r2 = self.bots[1].get_ans()
+        for b in self.bots:
+            ans[b] = self.bots[b].get_ans()
 
         # Who wins
         if r1=="C" and r2=="C":
@@ -100,7 +61,7 @@ class Prisonnier(threading.Thread):
         self.bots[0].send_msg(r2+'\n')
         self.bots[1].send_msg(r1+'\n')
 
-    def run(self):
+    def main(self):
         """ Process of the game """
         self.start_bots()
 

@@ -4,18 +4,23 @@
 # ------------------------------
 # Imports
 # ------------------------------ 
+import threading
+from bot import Bot
 
 # ------------------------------
 # Classes
 # ------------------------------ 
 
-class Game():
+GAMES_PATH = "Games/"
+GAMES_PATH = "bots/"
+
+class Game(threading.Thread):
     """ Docstring for Game
     
    Meta-class which future games will herites. It defines main caractéristiques of games 
 
     """
-    def __init__(self,name, folder):
+    def __init__(self,name):
         """ Initiate Game 
     
         @param name: Name of the game
@@ -23,27 +28,67 @@ class Game():
         
         """
         self.name = name
-        self.folder = folder
+        self.folder = GAMES_PATH + self.name
+        threading.Thread.__init__(self)
 
-    def import_bots(self):
+    def check_name(self, name):
+        """ Docstring of check_name
+        
+        Check if the name correspond to a folder containing the game
+    
+        @param name: name of the game
+        
+        """
+        if not os.path.exists(GAMES_PATH + name):
+            raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + name))
+        else:
+            self.name = name
+            self.path = GAMES_PATH + name + "/"
+            self.bots_path = self.path + BOTS_PATH
+
+    def import_bots(self, bots):
         """ Docstring for import_bots
         
-        Import bots which should be in self.folder/bots/
+        Import bots which should be in self.bots_path
+        
+        """
+        self.bots = {} 
+        for b in bots:
+            self.bots[b] = Bot(b, self.bots)
+        
+    def main(self):
+        """ Docstring for main
+        
+        Let the game going on
         
         """
         pass
+
+    def det_winner(self):
+        """ Docstring for det_winner
         
+        Determine the winner
+        
+        """
+        # Soucis! Tous les jeux ne se terminent pas de la même façon! Certain sont left to die et d'autres se jouent au score!
+        pass
+
+    # -------------------
+    # Communication with bots
+
     def send_bot(self, bot, msg):
         """ Docstring of send_bot
         
         Send to the bot a message
     
-        @param bot: the bot (form?)
+        @param bot: the bot name
         @param msg: the message string
         
         """
-        pass
-
+        try:
+            self.bots[bot].send(msg)
+        except Exception, e:
+            raise e
 
     def get_ans(self, bot):
         """ Docstring of get_ans
@@ -53,43 +98,37 @@ class Game():
         @param bot: the bot
         
         """
-        pass
+        try:
+            self.bots[bot].get_ans()
+        except Exception, e:
+            raise e
 
-    def main(self):
-        """ Docstring for main
-        
-        Let the game going on
-        
-        """
-        pass
-
-    def start_bot(self):
-        """ Docstring for start_bot
+    def start_bots(self):
+        """ Docstring for start_bots
         
         Start bots
         
         """
-        pass
+        for bot in self.bots.values():
+            bot.start_bot()
 
-    def ready_bot(self):
-        """ Docstring for ready_bot
+    def ready_bots(self):
+        """ Docstring for ready_bots
         
         Send the ready message to bots
         
         """
-        pass
+        for bot in self.bots.values():
+            bot.ready()
 
-    def end_bot(self):
-        """ Docstring for end_bot
+    def end_bots(self):
+        """ Docstring for end_bots
         
         Send the end of the game message to bots
         
         """
-        pass
-
-# ------------------------------
-# Fonctions
-# ------------------------------ 
+        for bot in self.bots.values():
+            bot.end_game()
 
 # ------------------------------
 # Bloc principal
@@ -98,9 +137,6 @@ class Game():
 if __name__ == '__main__':
     pass
 
-# ------------------------------
-# Fin du programme
-# ------------------------------
 
 # -----------------------------
 # Reglages pour 'vim'
