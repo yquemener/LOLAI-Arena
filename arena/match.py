@@ -95,7 +95,7 @@ class Match(threading.Thread):
             self.bots[0].score+=1
             self.bots[1].score+=1
         else:
-            raise ValueError("Your answer doesn't correspond to the game:  r1= {r1}, r2 = {r2}".format(r1 = r1, r2 = r2))
+            raise ValueError("Your answer doesn't correspond to the game:  r1 = {r1}, r2 = {r2}".format(r1 = r1, r2 = r2))
 
         # Send results to other bots
         self.bots[0].send_msg(r2+'\n')
@@ -141,12 +141,16 @@ class Match(threading.Thread):
 
 if __name__ == '__main__':
 
-    bots = ["AlwaysT", "AlwaysC", "Random"]
-    #bots = ["Random"]
-    c1 = bots[0]
-    c2 = bots[1]
+    import sys
+
+    bots = ["AlwaysT", "AlwaysC", "Random", "Imitator", "IvBot"]
+    contender=None
+    if len(sys.argv)>1:
+        if sys.argv[1] in bots:
+            contender = sys.argv[1]
 
     for b1 in bots:
+        if contender!=None and b1!=contender: continue
         for b2 in bots:
             match = Match([b1,b2])
             match.start()
@@ -154,8 +158,5 @@ if __name__ == '__main__':
             if match.isAlive():
                 print "Failed to answer in time"
             else:
-                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str((match.bots[0].score,match.bots[1].score)))
                 match.det_winner()
-                print match.winner
-
-
+                print "{b1} vs {b2}: score {scores} : {winner}".format(b1 = b1, b2 = b2, scores = str((match.bots[0].score,match.bots[1].score)), winner=match.winner)
