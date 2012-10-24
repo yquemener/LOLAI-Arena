@@ -34,8 +34,9 @@ class Arena():
         """
         self.games = {}
         for game in os.listdir(GAMES_PATH):
-            self.games[game] = []
+            self.games[game] = {}
             self.get_bots(game)
+            self.get_info(game)
 
     def get_bots(self, game_name):
         """ Docstring of get_bots
@@ -47,8 +48,23 @@ class Arena():
         if not os.path.exists(GAMES_PATH + game_name):
             raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + game_name))
         else:
+            self.games[game_name]["bots"] = []
             for bot in os.listdir(GAMES_PATH + game_name + "/" + BOTS_PATH):
-                self.games[game_name] += [bot]
+                self.games[game_name]["bots"] += [bot]
+
+    def get_info(self, game_name):
+        """ Docstring of get_info
+        Get requiered informations on the game
+    
+        @param game_name: the name of the game
+        
+        """
+        # Importing the game 
+        game_mod = __import__(game_name.lower())
+        Game = getattr(game_mod, game_name)
+
+        # updating information on the game
+        self.games[game_name].update(Game.requiered_info())
 
     def play_game(self, game_name, bots, **args):
         """ Docstring of play_game

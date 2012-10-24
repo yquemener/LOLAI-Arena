@@ -10,22 +10,21 @@
     <form action="/vs" method="post">
     <input type='hidden' name='game' value='{{game}}'>
     <p> 
-    <!--
-    Les options devront être dans un future qu'on espère proche être donnée par le "game" avec une super @classmethod
-    Comme ça on aura le nombre de joueurs, le nombre de manches....
-    --!>
-    Nombre de manches 
-    <input type="text" name="manche" value='50'></br>
-    Joueur 1:
-    % for b in games[game]:
-        <input type="radio" name="player1" value="{{b}}" id="{{b}}" required/> <label for="{{b}}">{{b}}</label>
+
+    %for elem in [e for e in games[game] if (e!="players") and (e!="bots")]:
+    {{games[game][elem][1]}}
+    <input type="text" name="{{elem}}" value='{{games[game][elem][0]}}
+'></br>
+    %end
+
+    %for i in range(games[game]["players"]):
+    Joueur {{i+1}}:
+    % for b in games[game]["bots"]:
+        <input type="radio" name="player{{i+1}}" value="{{b}}" id="{{b}}" required/> <label for="{{b}}">{{b}}</label>
     %end
     </br>
-    Joueur 2:
-    % for b in games[game]:
-        <input type="radio" name="player2" value="{{b}}" id="{{b}}" required/> <label for="{{b}}">{{b}}</label>
     %end
-    </br>
+
     <input type="submit" value="Jouer le match">
     </p>
 %end

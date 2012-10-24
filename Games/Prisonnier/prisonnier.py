@@ -90,6 +90,28 @@ class Prisonnier(Game):
         return {'bots' : self.bots, 'winner' : self.winner}
 
 
+    # -------------------
+    # Description of the game
+
+    @classmethod
+    def requiered_info(self):
+        """ Docstring for requiered_info
+        
+        Return requiered informations for the game such number of players, number of rounds....
+        
+        """
+        return {"players":2, "round": (50, "Nombre de manches")}
+
+    @classmethod
+    def rules(self):
+        """ Docstring for rules
+        
+        Return the rules of the game
+        
+        """
+        pass
+
+
 # ----------------------
 # What is run in this file
 

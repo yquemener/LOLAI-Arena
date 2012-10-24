@@ -34,35 +34,6 @@ class Game(threading.Thread):
         self.import_bots(bots)
 
         threading.Thread.__init__(self)
-
-    def check_name(self, name):
-        """ Docstring of check_name
-        
-        Check if the name correspond to a folder containing the game
-        And set name, path and bots_path
-    
-        @param name: name of the game
-        
-        """
-        if not os.path.exists(GAMES_PATH + name):
-            raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + name))
-        else:
-            # We can't call this attribute name because of threading
-            self.game_name = name
-            self.path = GAMES_PATH + self.game_name + "/"
-            self.bots_path = self.path + BOTS_PATH
-
-    def import_bots(self, bots):
-        """ Docstring for import_bots
-        
-        Import bots which should be in self.bots_path
-
-        @param bots: list of games name
-        
-        """
-        self.bots = [] 
-        for b in bots:
-            self.bots += [Bot(b, self.bots_path)]
         
     def run(self):
         """ Docstring for main
@@ -135,10 +106,59 @@ class Game(threading.Thread):
         """
         for bot in self.bots:
             bot.send_msg("Q\n")
+        
+    # -------------------
+    # Description of the game
+
+    @classmethod
+    def requiered_info(self):
+        """ Docstring for requiered_info
+        
+        Return requiered informations for the game such number of players, number of rounds....
+        
+        """
+        return {"players":2}
+
+    @classmethod
+    def rules(self):
+        """ Docstring for rules
+        
+        Return the rules of the game
+        
+        """
+        pass
 
     # -------------------
     # Other methods
 
+    def check_name(self, name):
+        """ Docstring of check_name
+        
+        Check if the name correspond to a folder containing the game
+        And set name, path and bots_path
+    
+        @param name: name of the game
+        
+        """
+        if not os.path.exists(GAMES_PATH + name):
+            raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + name))
+        else:
+            # We can't call this attribute name because of threading
+            self.game_name = name
+            self.path = GAMES_PATH + self.game_name + "/"
+            self.bots_path = self.path + BOTS_PATH
+
+    def import_bots(self, bots):
+        """ Docstring for import_bots
+        
+        Import bots which should be in self.bots_path
+
+        @param bots: list of games name
+        
+        """
+        self.bots = [] 
+        for b in bots:
+            self.bots += [Bot(b, self.bots_path)]
     def det_winner(self):
         """ Docstring for det_winner
         
