@@ -154,7 +154,7 @@ if __name__ == '__main__':
             if match.isAlive():
                 print "Failed to answer in time"
             else:
-                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(match.scores))
+                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str((match.bots[0].score,match.bots[1].score)))
                 match.det_winner()
                 print match.winner
 
