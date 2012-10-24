@@ -1,3 +1,23 @@
+Prisonners dilemma
+==================
+
+Rules
+-----
+
+It is a two players game.
+There is a set number of turns.
+Each turn, players choose independently one out of two behaviors :
+cooperation(C) or betrayal(T). 
+They are rewarded as follows:
+ * If both cooperate, both get 5 points
+ * If both betray, both get 1 point
+ * If one betrays and one cooperates, the betrayer gets 10 points and the cooperator gets 0 points.
+
+The goal is to score the maximum of points.
+
+Protocol
+--------
+
 Bots must use stdin and stdout as communication channels. 
     In Python, that means outputing with print, inputing with raw_input()
     In C++, that means using cout and cin
@@ -8,10 +28,7 @@ Bots must use these channels without buffering<
 Bots must print "OK" after initializing then wait for an input.
 If the input is "A", the bot must play the first round.
 
-Subsequent input will be in the form "T 15 26"
-    The first character is the last choice of the opponent
-    The second number is the current score of the bot
-    The third number is the sum of the scores
+Subsequent input will be in the last choice of the opponent
 
 A bot must output a single character and a new line ("\n") at each round. The character is "C" for "cooperate" and "T" for "betray"
 An input of "Q" indicates that the run is finished and the bot must exit.
