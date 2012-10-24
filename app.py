@@ -30,7 +30,6 @@ def list_bot():
 # ------------------------------
 # Web pages
 
-ROUND_TIMEOUT = 0.01
 
 @route('/arena')
 @view(TEMPLATE_PATH + 'arena.tpl')

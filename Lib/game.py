@@ -55,6 +55,8 @@ class Game(threading.Thread):
         """ Docstring for import_bots
         
         Import bots which should be in self.bots_path
+
+        @param bots: list of games name
         
         """
         self.bots = [] 
