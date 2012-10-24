@@ -12,7 +12,7 @@
 %end
 <center> {{winner}} </center>
 </p>
-<p> <a href="arena"> Retour à l'arène </a> </p>
+<p> <a href="/"> Retour à l'arène </a> </p>
 
     
 

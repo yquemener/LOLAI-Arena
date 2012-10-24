@@ -5,11 +5,14 @@
 # Imports
 # ------------------------------ 
 
+import os
+
 # ------------------------------
 # Classes
 # ------------------------------ 
 
 GAMES_PATH = "Games/"
+BOTS_PATH = "bots/"
 ROUND_TIMEOUT = 0.01
 
 class Arena():
@@ -18,10 +21,9 @@ class Arena():
     Arena links bots and games to make them play together
 
     """
-    def __init__(self, arg):
+    def __init__(self):
         """ Initiate Arena """
-        super(Arena, self).__init__()
-        self.arg = arg
+        self.get_games()
         
 
     def get_games(self):
@@ -30,6 +32,7 @@ class Arena():
         list of avialable games and search bots associated
         
         """
+        self.games = {}
         for game in os.listdir(GAMES_PATH):
             self.games[game] = []
             self.get_bots(game)
@@ -44,7 +47,7 @@ class Arena():
         if not os.path.exists(GAMES_PATH + game_name):
             raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + game_name))
         else:
-            for bot in os.listdir(GAMES_PATH + game_name + "/"):
+            for bot in os.listdir(GAMES_PATH + game_name + "/" + BOTS_PATH):
                 self.games[game_name] += [bot]
 
     def play_game(self, game_name, bots, **args):
@@ -56,13 +59,15 @@ class Arena():
         @param **args: dictionnary of paramter to give to the game
         
         """
-        try:
-            game = eval(game_name)(bots, **args)
-            game.start()
-            game.join(ROUND_TIMEOUT*200)
-            return game.give_results()
-        except Exception, e:
-            raise e
+        # Importing the game 
+        game_mod = __import__(game_name.lower())
+        Game = getattr(game_mod, game_name)
+
+        # Creating the game
+        game = Game(bots, **args)
+        game.start()
+        game.join(ROUND_TIMEOUT*200)
+        return game.give_results()
 
 # ------------------------------
 # Bloc principal

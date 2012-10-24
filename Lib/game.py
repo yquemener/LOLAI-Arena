@@ -47,6 +47,7 @@ class Game(threading.Thread):
         if not os.path.exists(GAMES_PATH + name):
             raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + name))
         else:
+            # We can't call this attribute name because of threading
             self.game_name = name
             self.path = GAMES_PATH + self.game_name + "/"
             self.bots_path = self.path + BOTS_PATH

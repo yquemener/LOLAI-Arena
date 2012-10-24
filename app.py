@@ -13,41 +13,31 @@ site.addsitedir(CUR_DIR)
 # ------------------------------
 # Imports
 from bottle import route, run, view, post, request
-from prisonnier import Prisonnier
-
-# ------------------------------
-# Bricolages temporaire
-
-BOTS_PATH = "Games/Prisonnier/bots/"
-TEMPLATE_PATH = "Lib/template/"
-
-def list_bot():
-    """ List avialable bots"""
-    # C'est vraiment pas top de le faire comme ça, faudra faire des tests pour être sûr que c'est bien un bot et pas un fichier égaré!
-    return os.listdir(BOTS_PATH)
+from arena import Arena
 
 
 # ------------------------------
 # Web pages
+arena = Arena()
 
 
-@route('/arena')
-@view(TEMPLATE_PATH + 'arena.tpl')
-def arena():
+TEMPLATE_PATH = "Lib/template/"
+
+@route('/')
+@view(TEMPLATE_PATH + 'index.tpl')
+def index():
     """ Webpage listing games and their settings"""
-    context = {'bots' : list_bot()}
+    context = {'games' : arena.games}
     return context
 
 @route('/vs' , method='POST')
 @view(TEMPLATE_PATH + 'vs.tpl')
 def vs():
     """  Webpage which sum up the game"""
+    game = request.forms.get('game')
     bots = [request.forms.get('player1'),request.forms.get('player2')]
-    manche = int(request.forms.get('manche'))
-    match = Prisonnier(bots, manche)
-    match.start()
-    match.join(ROUND_TIMEOUT*200)
-    context = match.give_results()
+    round = int(request.forms.get('manche'))
+    context = arena.play_game(game, bots, round = round)
     return context
 
 # ------------------------------

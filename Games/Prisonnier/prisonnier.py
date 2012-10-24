@@ -95,21 +95,5 @@ class Prisonnier(Game):
 
 if __name__ == '__main__':
 
-    bots = ["AlwaysT", "AlwaysC", "Random"]
-    #bots = ["Random"]
-    c1 = bots[0]
-    c2 = bots[1]
-
-    for b1 in bots:
-        for b2 in bots:
-            prisonnier = Prisonnier([b1,b2])
-            prisonnier.start()
-            prisonnier.join(ROUND_TIMEOUT*200)
-            if prisonnier.isAlive():
-                print "Failed to answer in time"
-            else:
-                print "{b1} vs {b2}: score {scores}".format(b1 = b1, b2 = b2, scores = str(prisonnier.scores))
-                prisonnier.det_winner()
-                print prisonnier.winner
-
+    pass
 
