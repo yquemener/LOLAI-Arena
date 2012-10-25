@@ -66,7 +66,7 @@ class Arena():
         # updating information on the game
         self.games[game_name].update(Game.requiered_info())
 
-    def play_game(self, game_name, bots, **args):
+    def play_game(self, **args):
         """ Docstring of play_game
         Play the game between bots
     
@@ -75,6 +75,12 @@ class Arena():
         @param **args: dictionnary of paramter to give to the game
         
         """
+        # Extracting from info
+        game_name = args.pop("game_name")
+        bots = []
+        for b in [b for b in args if "bot" in b]:
+            bots += [args.pop(b)]
+
         # Importing the game 
         game_mod = __import__(game_name.lower())
         Game = getattr(game_mod, game_name)

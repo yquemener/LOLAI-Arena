@@ -20,8 +20,6 @@ from arena import Arena
 # Web pages
 arena = Arena()
 
-print arena.games
-
 TEMPLATE_PATH = "Lib/template/"
 
 @route('/')
@@ -35,10 +33,8 @@ def index():
 @view(TEMPLATE_PATH + 'vs.tpl')
 def vs():
     """  Webpage which sum up the game"""
-    game = request.forms.get('game')
-    bots = [request.forms.get('player1'),request.forms.get('player2')]
-    round = int(request.forms.get('round'))
-    context = arena.play_game(game, bots, round = round)
+    info = request.forms
+    context = arena.play_game(**info)
     return context
 
 # ------------------------------

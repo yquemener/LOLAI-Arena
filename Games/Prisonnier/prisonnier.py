@@ -20,7 +20,7 @@ class Prisonnier(Game):
         """
 
         Game.__init__(self, Prisonnier.NAME, bots)
-        self.round = round
+        self.round = int(round)
 
     def steady_bots(self):
         """Description of steady_bots
