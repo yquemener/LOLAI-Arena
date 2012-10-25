@@ -1,0 +1,15 @@
+See doc/protocol for generalities on bot programming.
+
+Prisonnier
+=========
+
+Once the bot is initialised.
+
+The game will send "A" which means that it is waiting for the choice:
+    - "C\n" to cooperate
+    - "T\n" to betray
+Once bots have sent their choice, the game will send them the choice of the other bot.
+Then it loops.
+
+The game is finished when the game send "Q\n"
+

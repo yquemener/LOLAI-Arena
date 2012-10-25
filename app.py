@@ -2,46 +2,39 @@
 #-*- coding:utf8-*-
 
 # ------------------------------
-# Imports
-from bottle import route, run, view, post, request
-from match import Match
-
+# Easier import system
+# Files in folders which are in .pth will be imortable with a simple import
 import os
+import site
 
+CUR_DIR = os.path.dirname(os.path.realpath(__file__))
+site.addsitedir(CUR_DIR)
 
 # ------------------------------
-# Bricolages temporaire
-
-BOTS_PATH = "../bots/"
-def list_bot():
-    """ List available bots"""
-    # C'est vraiment pas top de le faire comme ça, faudra faire des tests pour être sûr que c'est bien un bot et pas un fichier égaré!
-    return os.listdir(BOTS_PATH)
+# Imports
+from bottle import route, run, view, post, request
+from arena import Arena
 
 
 # ------------------------------
 # Web pages
+arena = Arena()
 
-ROUND_TIMEOUT = 0.01
+TEMPLATE_PATH = "Lib/template/"
 
 @route('/')
-@route('/arena')
-@view('template/arena.tpl')
-def arena():
+@view(TEMPLATE_PATH + 'index.tpl')
+def index():
     """ Webpage listing games and their settings"""
-    context = {'bots' : list_bot()}
+    context = {'games' : arena.games}
     return context
 
 @route('/vs' , method='POST')
-@view('template/vs.tpl')
+@view(TEMPLATE_PATH + 'vs.tpl')
 def vs():
     """  Webpage which sum up the game"""
-    bots = [request.forms.get('player1'),request.forms.get('player2')]
-    manche = int(request.forms.get('manche'))
-    match = Match(bots, manche)
-    match.start()
-    match.join(ROUND_TIMEOUT*200)
-    context = match.give_results()
+    info = request.forms
+    context = arena.play_game(**info)
     return context
 
 @route('/vsall', method='POST')
