@@ -37,8 +37,8 @@ def arena():
 def vs():
     """  Webpage which sum up the game"""
     bots = [request.forms.get('player1'),request.forms.get('player2')]
-    manche = int(request.forms.get('manche'))
-    match = Match(bots, manche)
+    #manche = int(request.forms.get('manche'))
+    match = Match(bots)#, manche)
     match.start()
     match.join(ROUND_TIMEOUT*200)
     context = match.give_results()
