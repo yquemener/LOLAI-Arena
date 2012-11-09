@@ -5,12 +5,13 @@ import threading
 import bot
 
 from time import *
+from games.Prisoner import Prisoner
 
 ROUND_TIMEOUT = 0.01
 
 
 class Match(threading.Thread):
-    def __init__(self, bots, round = 50):
+    def __init__(self, bots, game = Prisoner(), round = 50):
         """ Initialization of the game
 
         @param bots: list of bots
@@ -22,6 +23,7 @@ class Match(threading.Thread):
         self.round = round
         self.scores = [0]*len(bots)
         self.error=0
+        self.game = game
         threading.Thread.__init__(self)
 
     def import_bots(self, bots):
@@ -78,28 +80,15 @@ class Match(threading.Thread):
     
         """
         # Reading bots choices
-        r1 = self.bots[0].get_ans()
-        r2 = self.bots[1].get_ans()
+        orders = {
+                0:self.bots[0].get_ans(),
+                1:self.bots[1].get_ans()}
 
-        # Who wins
-        if r1=="C" and r2=="C":
-            self.bots[0].score+=5
-            self.bots[1].score+=5
-        elif r1=="C" and r2=="T":
-            self.bots[0].score+=0
-            self.bots[1].score+=10
-        elif r1=="T" and r2=="C":
-            self.bots[0].score+=10
-            self.bots[1].score+=0
-        elif r1=="T" and r2=="T":
-            self.bots[0].score+=1
-            self.bots[1].score+=1
-        else:
-            raise ValueError("Your answer doesn't correspond to the game:  r1 = {r1}, r2 = {r2}".format(r1 = r1, r2 = r2))
+        ans = self.game.oneRound(orders)
 
         # Send results to other bots
-        self.bots[0].send_msg(r2+'\n')
-        self.bots[1].send_msg(r1+'\n')
+        self.bots[0].send_msg(ans[0]+'\n')
+        self.bots[1].send_msg(ans[1]+'\n')
 
     def run(self):
         """ Process of the game """
@@ -123,9 +112,10 @@ class Match(threading.Thread):
         """ Choose the winner """
         # On doit pouvoir faire mieux pour récuperer l'index du gagnant avec un l.index(max(l)).
         # Mais ya un soucis avec le cas d'égalité
-        if (self.bots[1].score > self.bots[0].score):
+        sc=self.game.getWorldState()['scores']
+        if (sc[1]>sc[0]):
             self.winner = "{winner} wins!".format(winner = self.bots[1].name)
-        elif (self.bots[1].score < self.bots[0].score):
+        elif (sc[1] < sc[0]):
             self.winner = "{winner} wins!".format(winner = self.bots[0].name)
         else:
             self.winner = "Draw"
@@ -133,7 +123,9 @@ class Match(threading.Thread):
     def give_results(self):
         """ Give the sum up of the game"""
         self.det_winner()
-        return {'bots' : self.bots, 'winner' : self.winner}
+        return {'bots' : self.bots, 
+                'winner' : self.winner, 
+                'scores': self.game.getWorldState()['scores']}
 
 
 # ----------------------
@@ -159,4 +151,4 @@ if __name__ == '__main__':
                 print "Failed to answer in time"
             else:
                 match.det_winner()
-                print "{b1} vs {b2}: score {scores} : {winner}".format(b1 = b1, b2 = b2, scores = str((match.bots[0].score,match.bots[1].score)), winner=match.winner)
+                print "{b1} vs {b2}: score {scores} : {winner}".format(b1 = b1, b2 = b2, scores = match.give_results()['scores'], winner=match.winner)

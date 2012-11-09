@@ -58,10 +58,11 @@ def vsall():
             mat.start()
             mat.join(ROUND_TIMEOUT*200)
             bots = mat.give_results()["bots"]
-            scores[(c1,c2)] = (bots[0].score, bots[1].score)
+            sc = mat.give_results()['scores']
+            scores[(c1,c2)] = (sc[0], sc[1])
             if mat.isAlive():
                 scores[(c1,c2)]=None
-            scores[c1]+=bots[0].score
+            scores[c1]+=scores[(c1,c2)][0]
     return {'bots':contenders, 'scores':scores }
 # ------------------------------
 # What is run in this file
