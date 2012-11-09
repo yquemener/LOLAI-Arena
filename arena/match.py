@@ -43,6 +43,7 @@ class Match(threading.Thread):
         Start subprocess associated to bots
     
         """
+        self.game.__init__() # resets the game state
         for b in self.bots:
             b.start_bot()
 
