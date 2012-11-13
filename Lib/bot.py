@@ -12,12 +12,15 @@ import subprocess
 # Classes
 # ------------------------------ 
 BOTS_PATH = "Games/Prisonnier/bots/"
+#TODO: Il faudra enlever BOTS_PATH!!!
+        
 
 class Bot(object):
-    """ Bot class """
-    def __init__(self, name, bots_path = BOTS_PATH):
-        # Il faudra enlever BOTS_PATH!!!
-        """ Initiate bot class
+    """Bot class
+    
+    """
+    def __init__(self, name, bots_path=BOTS_PATH):
+        """Initiates bot class
 
         @param name: the name of the bot (which correspond to the name of the folder)
         @param bots_path: path where bots are
@@ -27,44 +30,48 @@ class Bot(object):
         self.score = 0
         
     def check_name(self, name, bots_path):
-        """Description of check_name
-
-        Check if the name correspond to a folder containing program
+        """Checks if the name correspond to a folder containing program
     
         @param name: the name of the bot (which correspond to the name of the folder)
         @param bots_path: path where bots are
         
         """
-        if not os.path.exists(bots_path+name):
-            raise ValueError("Could not find bot '{bot}'".format(bot = bots_path + name))
+        if not os.path.exists(bots_path + name):
+            raise ValueError("Could not find bot '{bot}'".format(bot=bots_path + name))
         else:
             self.name = name
-            self.path = bots_path + name + "/"
-
+            self.path = bots_path + name + os.sep
 
     def start_bot(self):
-        """ Start the subprocess associated to the bot """
+        """Starts the subprocess associated to the bot 
+        
+        """
         self.proc = subprocess.Popen("./start", stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                cwd=os.path.abspath(self.path))
+									 stdout=subprocess.PIPE,
+									 cwd=os.path.abspath(self.path))
 
     def ready(self):
-        """ Check if the bot is ready to play """
-        if self.proc.stdout.readline()!="OK\n":
-            raise ValueError("Le bot {bot} n'arrive pas à ce préparer".format(bot = self.name))
+        """Checks if the bot is ready to play or raise an error.
+        
+        """
+        if self.proc.stdout.readline() != "OK\n":
+            raise ValueError("Le bot {bot} n'arrive pas à se préparer".format(bot=self.name))
 
     def send_msg(self, msg):
-        """Description of send_msg
-        
-        Send message to the bot
+        """Sends message to the bot
     
         @param msg: the message to send
         
         """
         self.proc.stdin.write(msg)
 
+#TODO: rename get_ans to get_answer!!!
     def get_ans(self):
-        """ Get the answer of the bot """
+        """Gets the answer of the bot
+        
+        @return: the bot's answer
+        
+        """
         return self.proc.stdout.readline().rstrip()
 
 
