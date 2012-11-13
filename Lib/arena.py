@@ -15,21 +15,20 @@ GAMES_PATH = "Games/"
 BOTS_PATH = "bots/"
 ROUND_TIMEOUT = 0.01
 
+
 class Arena():
-    """ Docstring for Arena
-    
-    Arena links bots and games to make them play together
+    """Arena links bots and games to make them play together
 
     """
     def __init__(self):
-        """ Initiate Arena """
+        """ Initiate Arena 
+        
+        """
         self.get_games()
         
 
     def get_games(self):
-        """ Docstring for get_games
-        
-        list of avialable games and search bots associated
+        """Gets the list of avialable games and search bots associated
         
         """
         self.games = {}
@@ -39,22 +38,20 @@ class Arena():
             self.get_info(game)
 
     def get_bots(self, game_name):
-        """ Docstring of get_bots
-        List bot associated to the game
+        """Gets the bot list associated to the game
     
         @param game_name: the name of the game
         
         """
         if not os.path.exists(GAMES_PATH + game_name):
-            raise ValueError("Could not find the game at '{game}'".format(game = GAMES_PATH + game_name))
+            raise ValueError("Could not find the game at '{game}'".format(game=GAMES_PATH + game_name))
         else:
             self.games[game_name]["bots"] = []
             for bot in os.listdir(GAMES_PATH + game_name + "/" + BOTS_PATH):
                 self.games[game_name]["bots"] += [bot]
 
     def get_info(self, game_name):
-        """ Docstring of get_info
-        Get requiered informations on the game
+        """Gets requiered informations on the game
     
         @param game_name: the name of the game
         
@@ -66,13 +63,16 @@ class Arena():
         # updating information on the game
         self.games[game_name].update(Game.requiered_info())
 
+#TODO: if game_name required, it should be explicitly added to args, so it should
+# be in first position or be initialized and checked. There should be a better way
+# to write this
     def play_game(self, **args):
-        """ Docstring of play_game
-        Play the game between bots
+        """Plays the game between bots
     
-        @param game: the game to play
-        @param bots: bots which are going to play
-        @param **args: dictionnary of paramter to give to the game
+        @param **args: dictionnary of parameters to give to the game. 
+        Should contain the parameter "game_name" and parameters 
+        containing the string "bot" (bots that will play).
+        @return: results
         
         """
         # Extracting from info
@@ -88,7 +88,7 @@ class Arena():
         # Creating the game
         game = Game(bots, **args)
         game.start()
-        game.join(ROUND_TIMEOUT*200)
+        game.join(ROUND_TIMEOUT * 200)
         return game.give_results()
 
 # ------------------------------
