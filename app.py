@@ -37,9 +37,17 @@ def vs():
     context = arena.play_game(**info)
     return context
 
-@route('/vsall', method='POST')
+@route('/challenge', method='POST')
+@view(TEMPLATE_PATH + 'challenge.tpl')
 def vsall():
     """ Tableau de résultat de tous les matchs"""
+    info = request.forms
+    context = arena.play_challenge(**info)
+    return context
+
+
+
+
     # Idéalement, ca devrait etre un template mais j'ai juste recopie mon vieux code pour faire vite
     html='<html><body><table style="">'
     contenders = list_bot()

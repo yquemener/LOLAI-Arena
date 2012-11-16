@@ -26,7 +26,16 @@
     %end
 
     <input type="submit" value="Jouer le match">
+    </form>
     </p>
+    <p> 
+    <form action="/challenge" method="post">
+    <input type='hidden' name='game_name' value='{{game}}'>
+    <input type='hidden' name='chall_type' value='championship'>
+    <input type='submit' value="Que tout le monde s'affronte!">
+    </form>
+    </p>
+    
 %end
 
     
