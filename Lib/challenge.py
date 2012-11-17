@@ -43,6 +43,7 @@ class Challenge():
         Game = getattr(game_mod, self.game)
 
         # Pour le moment on n'organise que des matchs 1v1 faudrait l'étendre aux jeux nvn
+        # Reste le soucis de comment stocker le score des matches mirors?
         self.scores = [[0 for k in self.bots] for j in self.bots]
         snd_bot_list = list(self.bots)
         for (i,bi) in enumerate(self.bots):
@@ -52,11 +53,8 @@ class Challenge():
                 game.join(ROUND_TIMEOUT * 200)
                 results = game.give_results()
                 self.scores[i][j+i] = results['bots'][0].score
-                # here we write i+j because each time we remove one item the snd_bot_list
+                # here we write i+j because each time we remove one item in snd_bot_list
                 self.scores[j+i][i] = results['bots'][1].score
-
-                print("{b1} vs {b2}: {r1} - {r2}".format(b1 = bi, b2 = bj, r1 = results['bots'][0].score,r2 = results['bots'][1].score))
-
             snd_bot_list.remove(bi)
 
     def give_res_champ(self):

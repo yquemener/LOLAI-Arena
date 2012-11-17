@@ -22,8 +22,8 @@
 %for (i,bi) in enumerate(bots):
     <tr>
     <td><div class="header">{{bi}}</div></td>
-    %for (j,sco) in enumerate(scores[i]):
-        <td><div class="score">{{sco}}\{{scores[j][i]}}</div></td>
+    %for (j,bj) in enumerate(bots):
+        <td><div class="score">{{scores[i][j]}}\{{scores[j][i]}}</div></td>
     %end
     <td><div class="sum">{{sum(scores[i])}}</div></td>
     </tr>
