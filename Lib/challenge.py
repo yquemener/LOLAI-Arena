@@ -52,9 +52,9 @@ class Challenge():
                 game.start()
                 game.join(ROUND_TIMEOUT * 200)
                 results = game.give_results()
-                self.scores[i][j+i] = results['bots'][0].score
+                self.scores[i][j+i] = (results['bots'][0].score, results['bots'][1].score)
                 # here we write i+j because each time we remove one item in snd_bot_list
-                self.scores[j+i][i] = results['bots'][1].score
+                self.scores[j+i][i] = (results['bots'][1].score, results['bots'][0].score)
             snd_bot_list.remove(bi)
 
     def give_res_champ(self):
