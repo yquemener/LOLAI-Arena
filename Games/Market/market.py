@@ -91,6 +91,11 @@ class Market(Game):
         """Rules of the game
     
         """
+        # Clear the markets
+        self.flour_market = list()
+        self.wheat_market = list()
+        self.transactions_done=list()
+        
         # Reading bots choices
         for bn in self.bots.keys():
             ans=json.loads(self.bots[bn].get_ans())
@@ -109,8 +114,30 @@ class Market(Game):
                     else:
                         self.wheat_market.append(
                                 [bn,act[0],act[2],act[3]])
+        # Running the farms and the mills
+        for bn in self.players_stat.leys():
+            pl = self.players_state[bn]
+            pl.wheat += pl.farms*self.farm_production
+            transformed = min(pl.mills*self.mill_production, pl.wheat)
+            pl.flour += transformed
+            pl.wheat -= transformed
 
-    def buy_facility(self, botname, ftype, qty):
+        # Running the markets
+
+        # The flour market is easy
+        self.flour_market.sort(key=lambda x:x[3])
+        print self.flour_market
+        tobuy = self.flour_bought_each_turn
+        i=len(self.flour_market)-1
+        while tobuy>0 and i>0:
+            if self.flour_market[i][0]=="sell" and 
+               self.flour_market[i][2]<tobuy:
+
+            i-=1
+            
+            
+   
+   def buy_facility(self, botname, ftype, qty):
         if ftype=="farm":
             if(self.players_state[botname].cash >=
                qty*self.farm_price):
