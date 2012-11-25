@@ -78,6 +78,6 @@ Actions to be done at the next turn are to be sent as a list :
 [action1,
 action2,
 ...]
-action = [buy|sell n farm|mill]
-	 [buy|sell wheat|flour price quantity]
+action = [buy|sell farm|mill quantity]
+	 [buy|sell wheat|flour quantity price] 
 
