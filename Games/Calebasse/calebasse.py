@@ -17,10 +17,35 @@ ROUND_TIMEOUT = 0.01
 
 class Calebasse(Game):
     NAME = "Calebasse"
-    def __init__(self, arg):
-        """ Initiate Calebasse """
-        super(Calebasse, self).__init__()
-        self.arg = arg
+    def __init__(self, bots):
+        """ Initiate Calebasse 
+        
+        @param bots: list of bots
+
+        """
+        Game.__init__(self, Calebasse.NAME, bots)
+
+
+    def run_game(self):
+        """ run_game
+        
+        """
+
+        # The game finish when there is only one player left
+        while len([b for b in self.bots if b.pocket >0]) > 1:
+            self.round()
+
+        self.end()
+
+
+    def det_winner(self):
+        """ det_winner
+        """
+        if len([b for b in self.bots if b.pocket >0]) == 1:
+            self.winner = [b for b in self.bots if b.pocket >0][0]
+        else:
+            raise ValueError("There is more than one player")
+
         
 
 # ------------------------------
