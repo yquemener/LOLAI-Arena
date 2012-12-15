@@ -115,7 +115,7 @@ class Market(Game):
                         self.wheat_market.append(
                                 [bn,act[0],act[2],act[3]])
         # Running the farms and the mills
-        for bn in self.players_stat.leys():
+        for bn in self.players_stat.keys():
             pl = self.players_state[bn]
             pl.wheat += pl.farms*self.farm_production
             transformed = min(pl.mills*self.mill_production, pl.wheat)
@@ -130,10 +130,64 @@ class Market(Game):
         tobuy = self.flour_bought_each_turn
         i=len(self.flour_market)-1
         while tobuy>0 and i>0:
-            if self.flour_market[i][0]=="sell" and 
-               self.flour_market[i][2]<tobuy:
-
+            (bn, buysell; qty, price) = self.flour_market[i]
+            if buysell=="sell":
+                pl=self.players_stat[bn]
+                if qty >= tobuy:
+                    if pl.flour >= tobuy:
+                        pl.flour-=tobuy
+                        tobuy=0
+                        pl.cash+=tobuy*price
+                    else:
+                        pl.cash+=pl.flour*price
+                        tobuy-=pl.flour
+                        pl.flour=0
+                else:
+                    if pl.flour>=qty:
+                        pl.flour-=qty
+                        pl.cash+=qty*price
+                        tobuy-=qty
+                    else:
+                        pl.cash+=pl.flour*price
+                        tobuy-=pl.flour
+                        pl.flour=0
             i-=1
+            
+        # TODO Buy orders and done transaction to be implemented
+            
+        # The wheat market has a simple market maker :
+        # if an asking price is lower than an offer price, the transaction
+        # is made half of the way
+        print self.wheat_market
+        buys = list()
+        sells = list()
+        for o in self.wheat_market:
+            if o[1]=="buy":
+                buys.append([o[0],o[2],o[3]])
+            else:
+                sells.append([o[0],o[2],o[3]])
+        sells.sort(key=lambda x:x[2])
+        buys.sort(key=lambda x:-x[2])
+        idxb=0
+        idxs=0
+        while(buys[idxb][1]>sells[idxs][1]):
+            # accepted
+            buyer = self.players_stat[buys[idxb][0]]
+            seller = self.players_stat[sellss[idxs][0]]
+            price = 0.5*(buys[idxb][2] + sells[idxb][2])
+            price = 0.5*(buys[idxb][2] + sells[idxb][2])            
+            if buys[idxb][1]>sells[idxs][1]:
+                qty=sells[idxs][1]
+            else:
+                qty=buys[idxb][1]
+            if buyer.cash>price*qty and seller.wheat>qty:
+                buyer.cash -= price*qty
+                buyer.wheat += qty
+                seller.cash += price*qty
+                seller.wheat -= qty
+
+        
+        # TODO Done transaction to be implemented
             
             
    
@@ -148,6 +202,17 @@ class Market(Game):
                qty*self.mill_price):
                 self.players_state[botname].cash-=qty*self.mill_price
                 self.players_state[botname].mill+=qty
+
+   
+   def sell_facility(self, botname, ftype, qty):
+        if ftype=="farm":
+            if(self.players_state[botname].farm >= qty):
+                self.players_state[botname].farm-=qty
+                self.players_state[botname].cash+=qty*self.farm_price
+        if ftype=="mill":
+            if(self.players_state[botname].mill >= qty):
+                self.players_state[botname].mill-=qty
+                self.players_state[botname].cash+=qty*self.mill_price
 
 
     def det_winner(self):
