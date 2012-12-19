@@ -130,7 +130,7 @@ class Market(Game):
         tobuy = self.flour_bought_each_turn
         i=len(self.flour_market)-1
         while tobuy>0 and i>0:
-            (bn, buysell; qty, price) = self.flour_market[i]
+            (bn, buysell, qty, price) = self.flour_market[i]
             if buysell=="sell":
                 pl=self.players_stat[bn]
                 if qty >= tobuy:
@@ -185,13 +185,11 @@ class Market(Game):
                 buyer.wheat += qty
                 seller.cash += price*qty
                 seller.wheat -= qty
-
-        
         # TODO Done transaction to be implemented
             
             
    
-   def buy_facility(self, botname, ftype, qty):
+    def buy_facility(self, botname, ftype, qty):
         if ftype=="farm":
             if(self.players_state[botname].cash >=
                qty*self.farm_price):
@@ -204,7 +202,7 @@ class Market(Game):
                 self.players_state[botname].mill+=qty
 
    
-   def sell_facility(self, botname, ftype, qty):
+    def sell_facility(self, botname, ftype, qty):
         if ftype=="farm":
             if(self.players_state[botname].farm >= qty):
                 self.players_state[botname].farm-=qty
