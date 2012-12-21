@@ -159,6 +159,7 @@ class Game(threading.Thread):
         self.bots = [] 
         for b in bots:
             self.bots += [Bot(b, self.bots_path)]
+
     def det_winner(self):
         """ Docstring for det_winner
         
