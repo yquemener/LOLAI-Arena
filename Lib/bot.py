@@ -6,6 +6,7 @@
 # ------------------------------ 
 import os
 import subprocess
+import uuid
 
 
 # ------------------------------
@@ -27,6 +28,7 @@ class Bot(object):
 
         """
         self.check_name(name, bots_path)
+        self.uuid = uuid.uuid4()
         self.score = 0
         
     def check_name(self, name, bots_path):
