@@ -3,9 +3,9 @@ See doc/protocol for generalities on bot programming.
 Calebasse
 =========
 
-Once the bot is initialised.
+Once the bot is initialised (which means that it have sent "OK\n", the game will send him an id (to recognise himself).
 
-The game will send "state: {b1:__, b2:__, ...}\n" with th dictionnary of fund that each players have. Then it will wait for the bet of players.
+The game will send "{b1:__, b2:__, ...}\n" the dictionnary of fund that each players have. Then it will wait for the bet of players.
 Players send their bet: "bet\n". The game send whether or not the bet is accepted:
     - "Accepted\n" : if it is
     - "Rejected\n" : if it isn't. Then the player will have to send his bet again.
