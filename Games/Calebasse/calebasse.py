@@ -26,6 +26,22 @@ class Calebasse(Game):
         Game.__init__(self, Calebasse.NAME, bots)
 
 
+    def ready_bots(self):
+        """ 
+        
+        Send the ready message to bots and their id
+        
+        """
+        # Classical ready message
+        Game.ready_bots()
+
+        # Their id
+        for bot in self.bots:
+            bot.send_msg(bot.id)
+            if bot.get_ans() != "OK\n":
+                raie ValueError("The bot {bot} isn't happy with his given id!".format(bot=bot.name))
+
+
     def run_game(self):
         """ run_game
         
