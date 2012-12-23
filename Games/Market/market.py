@@ -55,11 +55,11 @@ class Market(Game):
 
         self.round = int(round)
         self.players_state = dict()
-        self.bots = dict()
+        self.botsid = dict()
         i = 0
-        for b in bots:
-            botname = b.name+str(i)
-            self.bots[botname] = b
+        for b in self.botsid:
+            botname = b+"_"+str(i)
+            self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
             i+=1
 
@@ -78,8 +78,8 @@ class Market(Game):
         
         """
         # send its bot its identification
-        for botname in self.bots.keys():
-            self.bots[botname].send_msg(botname)
+        for botname in self.botsid.keys():
+            self.botsid[botname].send_msg(botname)
 
         for k in range(self.round):
             # Send to bots the state of the world 
@@ -97,7 +97,7 @@ class Market(Game):
         self.transactions_done=list()
         
         # Reading bots choices
-        for bn in self.bots.keys():
+        for bn in self.botsid.keys():
             ans=json.loads(self.bots[bn].get_ans())
             for act in ans:
                 if len(act)==3:
@@ -115,7 +115,7 @@ class Market(Game):
                         self.wheat_market.append(
                                 [bn,act[0],act[2],act[3]])
         # Running the farms and the mills
-        for bn in self.players_stat.keys():
+        for bn in self.players_state.keys():
             pl = self.players_state[bn]
             pl.wheat += pl.farms*self.farm_production
             transformed = min(pl.mills*self.mill_production, pl.wheat)
@@ -132,7 +132,7 @@ class Market(Game):
         while tobuy>0 and i>0:
             (bn, buysell, qty, price) = self.flour_market[i]
             if buysell=="sell":
-                pl=self.players_stat[bn]
+                pl=self.players_state[bn]
                 if qty >= tobuy:
                     if pl.flour >= tobuy:
                         pl.flour-=tobuy
@@ -170,10 +170,10 @@ class Market(Game):
         buys.sort(key=lambda x:-x[2])
         idxb=0
         idxs=0
-        while(buys[idxb][1]>sells[idxs][1]):
+        while(idxb<len(buys) and idxs<len(selld) and buys[idxb][1]>sells[idxs][1]):
             # accepted
-            buyer = self.players_stat[buys[idxb][0]]
-            seller = self.players_stat[sellss[idxs][0]]
+            buyer = self.players_state[buys[idxb][0]]
+            seller = self.players_state[sellss[idxs][0]]
             price = 0.5*(buys[idxb][2] + sells[idxb][2])
             price = 0.5*(buys[idxb][2] + sells[idxb][2])            
             if buys[idxb][1]>sells[idxs][1]:
@@ -199,17 +199,17 @@ class Market(Game):
             if(self.players_state[botname].cash >=
                qty*self.mill_price):
                 self.players_state[botname].cash-=qty*self.mill_price
-                self.players_state[botname].mill+=qty
+                self.players_state[botname].mills+=qty
 
    
     def sell_facility(self, botname, ftype, qty):
         if ftype=="farm":
-            if(self.players_state[botname].farm >= qty):
-                self.players_state[botname].farm-=qty
+            if(self.players_state[botname].farms >= qty):
+                self.players_state[botname].farms-=qty
                 self.players_state[botname].cash+=qty*self.farm_price
         if ftype=="mill":
-            if(self.players_state[botname].mill >= qty):
-                self.players_state[botname].mill-=qty
+            if(self.players_state[botname].mills >= qty):
+                self.players_state[botname].mills-=qty
                 self.players_state[botname].cash+=qty*self.mill_price
 
 
@@ -217,6 +217,15 @@ class Market(Game):
         """ Choose the winner 
         
         """
+        bestscore=-1
+        bestname=""
+        for k in self.players_state.keys():
+            p=self.players_state[k]
+            score = p.cash+p.mills*self.mill_price+p.farms*self.farm_price
+            if bestscore<score:
+                bestscore = score
+                bestame = k
+        self.winner=bestname
 
     def give_results(self):
         """Give the sum up of the gam
