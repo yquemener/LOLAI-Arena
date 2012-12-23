@@ -1,0 +1,7 @@
+#!/bin/bash
+ret=`python -c 'import sys; print(sys.version_info[0])'`
+if [ $ret -eq 2 ]; then
+	python -u bot.py
+else
+	python2 -u bot.py
+fi 
