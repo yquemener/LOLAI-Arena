@@ -26,6 +26,12 @@ class Player:
                 self.farms,
                 self.mills]
 
+    def __str__(self):
+        return str(self.state())
+
+    def __repr__(self):
+        return str(self.state())
+
 
 class Market(Game):
     NAME = "Market"
@@ -45,7 +51,7 @@ class Market(Game):
         self.growing_cycle = 100
         self.flour_bought_each_turn = 50
         self.farm_production = 1
-        self.mill_transformation = 1
+        self.mill_production = 1
 
         # Initialization of the markets
         self.wheat_martket=list()
@@ -57,8 +63,8 @@ class Market(Game):
         self.players_state = dict()
         self.botsid = dict()
         i = 0
-        for b in self.botsid:
-            botname = b+"_"+str(i)
+        for b in self.bots:
+            botname = b.name+"_"+str(i)
             self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
             i+=1
@@ -98,7 +104,7 @@ class Market(Game):
         
         # Reading bots choices
         for bn in self.botsid.keys():
-            ans=json.loads(self.bots[bn].get_ans())
+            ans=json.loads(self.botsid[bn].get_ans())
             for act in ans:
                 if len(act)==3:
                     # farm/mill buy
@@ -235,7 +241,7 @@ class Market(Game):
         
         """
         self.det_winner()
-        return {'bots': self.bots, 'winner': self.winner}
+        return {'bots': self.bots, 'winner': self.winner, "states" : self.players_state}
 
 
 # ----------------------
