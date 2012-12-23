@@ -12,7 +12,7 @@ ROUND_TIMEOUT = 0.01
 
 class Player:
     def __init__(self, name):
-        self.cash = 100
+        self.cash = 200
         self.farms = 0
         self.mills = 0
         self.wheat = 0
