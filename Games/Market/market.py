@@ -99,7 +99,7 @@ class Market(Game):
         """
         # send its bot its identification
         for botname in self.botsid.keys():
-            self.botsid[botname].send_msg(botname)
+            self.botsid[botname].send_msg(botname+"\n")
 
         for k in range(self.round):
             # Send to bots the state of the world 
@@ -148,7 +148,7 @@ class Market(Game):
         self.flour_market.sort(key=lambda x:x[3])
         tobuy = self.flour_bought_each_turn
         i=len(self.flour_market)-1
-        while tobuy>0 and i>0:
+        while tobuy>0 and i>=0:
             (bn, buysell, qty, price) = self.flour_market[i]
             if buysell=="sell":
                 pl=self.players_state[bn]
