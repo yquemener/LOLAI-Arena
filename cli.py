@@ -35,8 +35,8 @@ if bot2name not in games[gamename]["bots"]:
     exit()
 
 args = {"game_name" : gamename, "bot1" : bot1name, "bot2": bot2name}
-print games
-print arena.play_game(**args)
+
+arena.play_game(**args)
 
 # Reglages pour 'vim'
 # vim:set autoindent expandtab tabstop=4 shiftwidth=4:

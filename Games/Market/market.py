@@ -54,7 +54,7 @@ class Market(Game):
         self.mill_production = 1
 
         # Initialization of the markets
-        self.wheat_martket=list()
+        self.wheat_market=list()
         self.flour_market=list()
         self.transactions_done=list()
         self.stats=list()
@@ -69,12 +69,26 @@ class Market(Game):
             self.players_state[botname]=Player(botname)
             i+=1
 
+    def world_state(self):
+        players = list()
+        for p in self.players_state.values():
+            players.append(p.state())
+            
+        return [players, 
+                self.wheat_market, 
+                self.flour_market, 
+                self.transactions_done,
+                self.stats]
+        
     def steady_bots(self):
         """Sends to bots the new round message
     
         """
+        ws = self.world_state()
+        msg=json.dumps(ws)
+        
         for b in self.bots:
-            b.send_msg("A\n")
+            b.send_msg(msg+'\n')
 
     # -------------------
     # Main step of the game
@@ -132,7 +146,6 @@ class Market(Game):
 
         # The flour market is easy
         self.flour_market.sort(key=lambda x:x[3])
-        print self.flour_market
         tobuy = self.flour_bought_each_turn
         i=len(self.flour_market)-1
         while tobuy>0 and i>0:
@@ -164,7 +177,6 @@ class Market(Game):
         # The wheat market has a simple market maker :
         # if an asking price is lower than an offer price, the transaction
         # is made half of the way
-        print self.wheat_market
         buys = list()
         sells = list()
         for o in self.wheat_market:
