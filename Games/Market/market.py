@@ -18,6 +18,7 @@ class Player:
         self.wheat = 0
         self.flour = 0
         self.name = name
+        self.score = 0
 
     def state(self):
         return [self.name, self.cash,
@@ -61,13 +62,16 @@ class Market(Game):
 
         self.round = int(round)
         self.players_state = dict()
+        self.players_charts = dict()
         self.botsid = dict()
         i = 0
         for b in self.bots:
             botname = b.name+"_"+str(i)
             self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
+            self.players_charts[botname]=list()
             i+=1
+
 
     def world_state(self):
         players = list()
@@ -106,6 +110,10 @@ class Market(Game):
             self.steady_bots()
             # Rules of the game
             self.go()
+            # Store stats
+            for bn in self.players_state.keys():
+                pl = self.players_state[bn]
+                self.players_charts[bn].append(pl.cash)
 
     def go(self):
         """Rules of the game
@@ -240,20 +248,24 @@ class Market(Game):
         for k in self.players_state.keys():
             p=self.players_state[k]
             score = p.cash+p.mills*self.mill_price+p.farms*self.farm_price
+            self.botsid[k].score=score
             if bestscore<score:
                 bestscore = score
                 bestame = k
         self.winner=bestname
 
     def give_results(self):
-        """Give the sum up of the gam
+        """Give the sum up of the game
         
         @return: the bots and the winner
         @rtype: dictionary
         
         """
         self.det_winner()
-        return {'bots': self.bots, 'winner': self.winner, "states" : self.players_state}
+        return {'bots': self.bots, 
+                'winner': self.winner, 
+                'states' : self.players_state,
+                'players_charts' : self.players_charts}
 
 
 # ----------------------
