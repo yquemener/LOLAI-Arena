@@ -12,7 +12,7 @@ site.addsitedir(CUR_DIR)
 
 # ------------------------------
 # Imports
-from bottle import route, run, view, post, request
+from bottle import route, run, view, post, request, static_file
 from arena import Arena
 
 
@@ -21,6 +21,10 @@ from arena import Arena
 arena = Arena()
 
 TEMPLATE_PATH = "Lib/template/"
+
+@route('/static/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='./static/')
 
 @route('/')
 @view(TEMPLATE_PATH + 'index.tpl')
