@@ -8,11 +8,12 @@
 
 <body>
 <h1> LoL Arena </h1>
-
-<div id="container_cash" style="width:600px;height:300px;"></div>
-<div id="container_flour" style="width:600px;height:300px;"></div>
-<div id="container_wheat" style="width:600px;height:300px;"></div>
-
+<div>
+    <div id="container_cash" style="width:600px;height:300px;float: left;"></div>
+    <div id="container_flour" style="width:600px;height:300px;float: left;"></div>
+    <div id="container_wheat" style="width:600px;height:300px;float: left;"></div>
+    <div id="container_flour_price" style="width:600px;height:300px;float: left;"></div>
+</div>
 <h2> {{" vs ".join([b.name for b in bots])}} </h2>
 <p> Résultat final: <br/><br/>
 %for b in bots:
@@ -71,6 +72,20 @@ var f3 = Flotr.draw(
 	    points: {show: true}
 	},
 %end	
+]
+);
+
+var f4 = Flotr.draw(
+	$('container_flour_price'), [
+	{   data: [ 
+	    %for i in range(len(stats_charts["flour_price"])):
+	        [{{i}}, {{stats_charts["flour_price"][i]}}],
+	    %end
+	    ],
+	    label: "Flour price",
+	    lines: {show: true, fill: true},
+	    points: {show: true}
+	},
 ]
 );
 </script>

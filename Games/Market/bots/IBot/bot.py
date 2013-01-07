@@ -3,6 +3,7 @@
 
 import sys
 import json
+import random
 
 print "OK"
 
@@ -27,8 +28,22 @@ while ins!='Q':
     if ws[4][0]+ws[4][1]<=cash:
         orders.append('["buy", "farm",1]')
         orders.append('["buy", "mill",1]')
+        
+    # compute flour price
+    count=0
+    avg=0
+    for t in ws[3]:
+        count+=1
+        avg+=t[2]
+    if count>0:
+        avg/=count
+    else:
+        avg=9
+    factor = random.randint(950,1050)/1000.0
+    if avg*factor>10.0:
+        factor = 9.9/avg
     if flour>0:
-        orders.append('["sell","flour",'+str(flour)+','+str(flour_max_price-1)+']')
+        orders.append('["sell","flour",'+str(flour)+','+str(avg*factor)+']')
 
     sso = "[ "
     for o in orders:

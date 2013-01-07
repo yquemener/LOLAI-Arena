@@ -71,6 +71,7 @@ class Market(Game):
 
         self.round = int(round)
         self.players_state = dict()
+        self.stats_charts = {"flour_price" : [] }
         self.players_charts = dict()
         self.botsid = dict()
         i = 0
@@ -127,6 +128,16 @@ class Market(Game):
                 self.players_charts[bn]["cash"].append(pl.cash)
                 self.players_charts[bn]["wheat"].append(pl.wheat)
                 self.players_charts[bn]["flour"].append(pl.flour)
+            avg=0
+            count=0
+            for t in self.transactions_done:
+                count+=1
+                avg+=t[2]
+            if count>0:
+                avg/=count
+            else:
+                avg=0
+            self.stats_charts["flour_price"].append(avg)
 
     def go(self):
         """Rules of the game
@@ -177,19 +188,23 @@ class Market(Game):
                 if qty >= tobuy:
                     if pl.flour >= tobuy:
                         pl.cash+=tobuy*price
+                        self.transactions_done.append([bn,tobuy,price])
                         pl.flour-=tobuy
                         tobuy=0
                     else:
                         pl.cash+=pl.flour*price
+                        self.transactions_done.append([bn,pl.flour,price])
                         tobuy-=pl.flour
                         pl.flour=0
                 else:
                     if pl.flour>=qty:
-                        pl.flour-=qty
                         pl.cash+=qty*price
+                        self.transactions_done.append([bn,qty,price])
+                        pl.flour-=qty
                         tobuy-=qty
                     else:
                         pl.cash+=pl.flour*price
+                        self.transactions_done.append([bn,pl.flour,price])
                         tobuy-=pl.flour
                         pl.flour=0
             i-=1
@@ -279,7 +294,8 @@ class Market(Game):
         return {'bots': self.bots, 
                 'winner': self.winner, 
                 'states' : self.players_state,
-                'players_charts' : self.players_charts}
+                'players_charts' : self.players_charts,
+                'stats_charts' : self.stats_charts}
 
 
 # ----------------------
