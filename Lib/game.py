@@ -153,7 +153,7 @@ class Game(threading.Thread):
         
         Import bots which should be in self.bots_path
 
-        @param bots: list of bots name
+        @param bots: list of games name
         
         """
         self.bots = [] 
