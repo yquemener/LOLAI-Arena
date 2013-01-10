@@ -27,6 +27,7 @@
 
     <input type="submit" value="Jouer le match">
     </p>
+    </form>
 %end
 
     
