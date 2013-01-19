@@ -26,6 +26,7 @@ class Calebasse(Game):
 
         """
         Game.__init__(self, Calebasse.NAME, bots)
+        
 
         # Initial "money" (100 est arbitraire pour le moment)
         for b in self.bots:
@@ -39,20 +40,18 @@ class Calebasse(Game):
         
         """
         # Classical ready message
-        Game.ready_bots()
+        Game.ready_bots(self)
 
         # Their uuid
         for bot in self.bots:
             bot.send_msg(bot.uuid)
             if bot.get_ans() != "OK\n":
-                raie ValueError("The bot {bot} isn't happy with his given uuid!".format(bot=bot.name))
-
+                raise ValueError("The bot {bot} isn't happy with his given uuid!".format(bot=bot.name))
 
     def run_game(self):
         """ run_game
         
         """
-
         # The game finish when there is only one player left
         while len([b for b in self.bots if b.account >0]) > 1:
             self.round()
@@ -79,7 +78,7 @@ class Calebasse(Game):
                 res = re.search(bets_pattern, res)
                 bet = int(res.group())
                 # Can't more than you have
-                wait_for_good_bet = !(bet <= b.account)
+                wait_for_good_bet = 1 - (bet <= b.account)
             # Storing bets
             bets[b.uuid] = bet
             # takeoff the bet from his account
@@ -104,12 +103,6 @@ class Calebasse(Game):
             b.send_msg(winner.uuid)
         
 
-
-
-            
-
-
-
     def det_winner(self):
         """ det_winner
         """
@@ -117,6 +110,17 @@ class Calebasse(Game):
             self.winner = [b for b in self.bots if b.account >0][0]
         else:
             raise ValueError("There is more than one player")
+
+
+    def give_results(self):
+        """Give the sum up of the gam
+        
+        @return: the bots and the winner
+        @rtype: dictionary
+        
+        """
+        self.det_winner()
+        return {'bots': self.bots, 'winner': self.winner}
 
     # --------------------------
     # Few getters
@@ -127,6 +131,26 @@ class Calebasse(Game):
         """
         return {b.uuid:b.account for b in self.bots}
 
+    # -------------------
+    # Description of the game
+
+    @classmethod
+    def requiered_info(self):
+        """Gets requiered informations for the game such as
+        number of players, number of rounds....
+        
+        @return: number of players and of rounds
+        @rtype: dictionary
+        
+        """
+        return {"players": 2}
+
+    @classmethod
+    def rules(self):
+        """Gets the rules of the game
+        
+        """
+        pass
         
 
 
