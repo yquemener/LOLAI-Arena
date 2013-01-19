@@ -13,4 +13,4 @@ The game send the bet of everybody "bets: {b1:__, b2:__, ...}
 It send then the winner.
 
 
-At the end of the game, the game will send "Q\n"
+At the end of the game, the game will send "Q\n
