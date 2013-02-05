@@ -26,7 +26,7 @@ class Prisonnier(Game):
     
         """
         for b in self.bots:
-            b.send_msg("A\n")
+            b.send_msg("A")
 
     # -------------------
     # Main step of the game - adapted to prisonnier
@@ -66,8 +66,8 @@ class Prisonnier(Game):
             raise ValueError("Your answer doesn't correspond to the game:  r1 = {r1}, r2 = {r2}".format(r1=r1, r2=r2))
 
         # Send results to other bots
-        self.bots[0].send_msg(r2 + '\n')
-        self.bots[1].send_msg(r1 + '\n')
+        self.bots[0].send_msg(r2)
+        self.bots[1].send_msg(r1)
 
 
     def det_winner(self):

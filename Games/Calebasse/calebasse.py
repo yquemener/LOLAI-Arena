@@ -54,9 +54,17 @@ class Calebasse(Game):
         """
         # The game finish when there is only one player left
         while len([b for b in self.bots if b.account >0]) > 1:
+            self.steady_bots()
             self.round()
 
         self.end()
+
+    def steady_bots(self):
+        """Sends to bots the new round message
+    
+        """
+        for b in self.bots:
+            b.send_msg("A")
 
     def round(self ):
         """ On round of the game
@@ -72,7 +80,7 @@ class Calebasse(Game):
                 # Sending accounts
                 b.send_msg(json.dumps(acounts))
                 # Wait fot bet
-                b.send_msg("bet?\n")
+                b.send_msg("bet?")
                 res = b.get_ans()
                 # Analyse answer
                 res = re.search(bets_pattern, res)
@@ -83,7 +91,7 @@ class Calebasse(Game):
             bets[b.uuid] = bet
             # takeoff the bet from his account
             b.account -= bet
-            b.send_msg("Accepted\n")
+            b.send_msg("Accepted")
 
         # Drawing
         choice = int(sum(bets.values()) * random.random()) + 1

@@ -65,7 +65,7 @@ class Bot(object):
         @param msg: the message to send
         
         """
-        self.proc.stdin.write(msg)
+        self.proc.stdin.write(msg+"\n")
 
 #TODO: rename get_ans to get_answer!!!
     def get_ans(self):
