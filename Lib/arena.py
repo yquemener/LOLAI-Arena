@@ -6,6 +6,7 @@
 # ------------------------------ 
 
 import os
+from challenge import Challenge
 
 # ------------------------------
 # Classes
@@ -90,6 +91,33 @@ class Arena():
         game.start()
         game.join(ROUND_TIMEOUT * 200)
         return game.give_results()
+
+    def play_challenge(self, **args):
+        """ Ask to challenge to organised
+    
+        @param **args: Dictionnary of parameters the challenge.
+        Should contain the parameter "game_name"
+        @return: results
+                
+        """
+        game_name = args.pop('game_name')
+        if game_name in self.games:
+            bots = self.games[game_name]['bots']
+        else:
+            raise ValueError("{game}: unknown game".format(game = game_name))
+
+        challenge = Challenge(game_name, bots)
+        try:
+            chall_type = args.pop('chall_type')
+        except KeyError:
+            chall_type = 'championship'
+        finally:
+            if  chall_type in challenge.avialable_challenge:
+                getattr(challenge, chall_type)(**args)
+            else:
+                raise ValueError('{chal} is an unknown challenge type'.format(chal = chall_type))
+
+        return challenge.give_res_champ()
 
 # ------------------------------
 # Bloc principal
