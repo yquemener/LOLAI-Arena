@@ -8,15 +8,15 @@ int main ()
 
     cout << "OK" << endl;
 
-    string ans("C\n");
-    string other("C\n");
+    string ans("C");
+    string other("C");
 
     string master;
     cin >> master;
-    cout << "master: " << master << endl;
+    cerr << "master: " << master << endl;
 
     while(master != "Q\n"){
-        cout << "nouvelle boucle" << endl;
+        cerr << "nouvelle boucle" << endl;
         ans = other;
         cout << ans << endl;
         cin >> other;
