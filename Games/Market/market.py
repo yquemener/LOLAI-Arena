@@ -18,6 +18,7 @@ class Player:
         self.wheat = 0
         self.flour = 0
         self.name = name
+        self.score = 0
 
     def state(self):
         return [self.name, self.cash,
@@ -35,7 +36,7 @@ class Player:
 
 class Market(Game):
     NAME = "Market"
-    def __init__(self, bots, round=3000):
+    def __init__(self, bots, round=300):
         """Initialization of the market game
 
         @param bots: list of bots
@@ -52,22 +53,37 @@ class Market(Game):
         self.flour_bought_each_turn = 50
         self.farm_production = 1
         self.mill_production = 1
+        self.flour_max_price = 10
 
         # Initialization of the markets
         self.wheat_market=list()
         self.flour_market=list()
         self.transactions_done=list()
-        self.stats=list()
+        self.stats=[self.farm_price,
+                    self.mill_price,
+                    self.transformation_rate,
+                    self.growing_cycle,
+                    self.flour_bought_each_turn,
+                    self.farm_production,
+                    self.mill_production,
+                    self.flour_max_price]
+
 
         self.round = int(round)
         self.players_state = dict()
+        self.stats_charts = {"flour_price" : [] }
+        self.players_charts = dict()
         self.botsid = dict()
         i = 0
         for b in self.bots:
             botname = b.name+"_"+str(i)
             self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
+            self.players_charts[botname]={"cash":[],
+                                          "wheat":[],
+                                          "flour":[]}
             i+=1
+
 
     def world_state(self):
         players = list()
@@ -106,6 +122,22 @@ class Market(Game):
             self.steady_bots()
             # Rules of the game
             self.go()
+            # Store stats
+            for bn in self.players_state.keys():
+                pl = self.players_state[bn]
+                self.players_charts[bn]["cash"].append(pl.cash)
+                self.players_charts[bn]["wheat"].append(pl.wheat)
+                self.players_charts[bn]["flour"].append(pl.flour)
+            avg=0
+            count=0
+            for t in self.transactions_done:
+                count+=1
+                avg+=t[2]
+            if count>0:
+                avg/=count
+            else:
+                avg=0
+            self.stats_charts["flour_price"].append(avg)
 
     def go(self):
         """Rules of the game
@@ -118,7 +150,8 @@ class Market(Game):
         
         # Reading bots choices
         for bn in self.botsid.keys():
-            ans=json.loads(self.botsid[bn].get_ans())
+            s=self.botsid[bn].get_ans()
+            ans=json.loads(s)
             for act in ans:
                 if len(act)==3:
                     # farm/mill buy
@@ -145,29 +178,33 @@ class Market(Game):
         # Running the markets
 
         # The flour market is easy
-        self.flour_market.sort(key=lambda x:x[3])
+        self.flour_market.sort(key=lambda x:-x[3])
         tobuy = self.flour_bought_each_turn
         i=len(self.flour_market)-1
-        while tobuy>0 and i>=0:
+        while tobuy>0 and i>=0 and self.flour_market[i][3] <= self.flour_max_price:
             (bn, buysell, qty, price) = self.flour_market[i]
             if buysell=="sell":
                 pl=self.players_state[bn]
                 if qty >= tobuy:
                     if pl.flour >= tobuy:
+                        pl.cash+=tobuy*price
+                        self.transactions_done.append([bn,tobuy,price])
                         pl.flour-=tobuy
                         tobuy=0
-                        pl.cash+=tobuy*price
                     else:
                         pl.cash+=pl.flour*price
+                        self.transactions_done.append([bn,pl.flour,price])
                         tobuy-=pl.flour
                         pl.flour=0
                 else:
                     if pl.flour>=qty:
-                        pl.flour-=qty
                         pl.cash+=qty*price
+                        self.transactions_done.append([bn,qty,price])
+                        pl.flour-=qty
                         tobuy-=qty
                     else:
                         pl.cash+=pl.flour*price
+                        self.transactions_done.append([bn,pl.flour,price])
                         tobuy-=pl.flour
                         pl.flour=0
             i-=1
@@ -240,20 +277,25 @@ class Market(Game):
         for k in self.players_state.keys():
             p=self.players_state[k]
             score = p.cash+p.mills*self.mill_price+p.farms*self.farm_price
+            self.botsid[k].score=score
             if bestscore<score:
                 bestscore = score
                 bestame = k
         self.winner=bestname
 
     def give_results(self):
-        """Give the sum up of the gam
+        """Give the sum up of the game
         
         @return: the bots and the winner
         @rtype: dictionary
         
         """
         self.det_winner()
-        return {'bots': self.bots, 'winner': self.winner, "states" : self.players_state}
+        return {'bots': self.bots, 
+                'winner': self.winner, 
+                'states' : self.players_state,
+                'players_charts' : self.players_charts,
+                'stats_charts' : self.stats_charts}
 
 
 # ----------------------

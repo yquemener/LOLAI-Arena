@@ -12,7 +12,7 @@ site.addsitedir(CUR_DIR)
 
 # ------------------------------
 # Imports
-from bottle import route, run, view, post, request
+from bottle import route, run, view, post, request, static_file
 from arena import Arena
 
 
@@ -21,6 +21,10 @@ from arena import Arena
 arena = Arena()
 
 TEMPLATE_PATH = "Lib/template/"
+
+@route('/static/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='./static/')
 
 @route('/')
 @view(TEMPLATE_PATH + 'index.tpl')
@@ -33,6 +37,14 @@ def index():
 @view(TEMPLATE_PATH + 'vs.tpl')
 def vs():
     """  Webpage which sum up the game"""
+    info = request.forms
+    context = arena.play_game(**info)
+    return context
+
+@route('/vsmarket' , method='POST')
+@view(TEMPLATE_PATH + 'vsmarket.tpl')
+def vsmarket():
+    """  Webpage which sum up the marke game and traces charts"""
     info = request.forms
     context = arena.play_game(**info)
     return context

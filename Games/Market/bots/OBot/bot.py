@@ -8,7 +8,7 @@ print "OK"
 
 ins = raw_input()
 myid = ins
-sys.stderr.write("My id is " + myid + "\n")
+#sys.stderr.write("My id is " + myid + "\n")
 
 if ins!='Q':
     print '[["buy", "farm",1], ["buy", "mill", 1]]'
@@ -20,7 +20,7 @@ while ins!='Q':
         if(ws[0][idx][0]==myid):
             mystate = ws[0][idx]
             (n, cash, wheat, flour, farms, mill) = mystate
-    sys.stderr.write("My state :"+str(mystate)+"\n")
+    #sys.stderr.write("My state :"+str(mystate)+"\n")
     #sys.stderr.write("Sent :" + ins+"\n")
     if flour>0:
         print '[["sell", "flour", '+str(flour)+', 10]]'
