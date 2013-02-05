@@ -6,6 +6,7 @@
 # ------------------------------ 
 import os
 import subprocess
+import uuid
 
 
 # ------------------------------
@@ -27,6 +28,7 @@ class Bot(object):
 
         """
         self.check_name(name, bots_path)
+        self.uuid = str(uuid.uuid4())
         self.score = 0
         
     def check_name(self, name, bots_path):
@@ -63,7 +65,7 @@ class Bot(object):
         @param msg: the message to send
         
         """
-        self.proc.stdin.write(msg)
+        self.proc.stdin.write(msg+"\n")
 
 #TODO: rename get_ans to get_answer!!!
     def get_ans(self):

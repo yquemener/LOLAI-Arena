@@ -1,0 +1,16 @@
+See doc/protocol for generalities on bot programming.
+
+Calebasse
+=========
+
+Once the bot is initialised (which means that it have sent "OK\n"), the game will send him an uuid (to recognise himself) and the bot send once again "OK\n". The game can start!
+
+The game will send "{b1:__, b2:__, ...}\n" the dictionnary of account that each players have (it is an json object. json.loads will decode it but values and keys will be strings you may have to convert it to integer). Then it will send "bet?\n" and wait for the bet of players.
+Players send their bet: "__\n". The game send whether or not the bet is accepted:
+    - "Accepted\n" : if it is
+    - "bet?\n" : if it isn't. Then the player will have to send his bet again.
+The game send the bet of everybody "bets: {b1:__, b2:__, ...}
+It send then the winner.
+
+
+At the end of the game, the game will send "Q\n

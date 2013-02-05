@@ -104,7 +104,7 @@ class Market(Game):
         msg=json.dumps(ws)
         
         for b in self.bots:
-            b.send_msg(msg+'\n')
+            b.send_msg(msg)
 
     # -------------------
     # Main step of the game
@@ -115,7 +115,7 @@ class Market(Game):
         """
         # send its bot its identification
         for botname in self.botsid.keys():
-            self.botsid[botname].send_msg(botname+"\n")
+            self.botsid[botname].send_msg(botname)
 
         for k in range(self.round):
             # Send to bots the state of the world 

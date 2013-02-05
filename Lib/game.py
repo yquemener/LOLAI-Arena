@@ -158,12 +158,13 @@ class Game(threading.Thread):
         
         Import bots which should be in self.bots_path
 
-        @param bots: list of games name
+        @param bots: list of bots name
         
         """
         self.bots = [] 
         for b in bots:
             self.bots += [Bot(b, self.bots_path)]
+
     def det_winner(self):
         """ Docstring for det_winner
         
