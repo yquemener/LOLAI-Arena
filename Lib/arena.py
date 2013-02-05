@@ -90,7 +90,8 @@ class Arena():
         game = Game(bots, **args)
         game.start()
         game.join(ROUND_TIMEOUT * 200)
-        #TODO : raise an exception in case of timeout. Do not fail silently.
+        if self.isAlive():
+            raise ValueError("Bot timed out")
         return game.give_results()
 
     def play_challenge(self, **args):
