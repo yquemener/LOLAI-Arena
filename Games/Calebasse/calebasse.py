@@ -6,6 +6,8 @@
 # ------------------------------ 
 from game import Game
 from bot import Bot
+import sys
+import random
 
 from time import *
 import json
@@ -44,8 +46,8 @@ class Calebasse(Game):
 
         # Their uuid
         for bot in self.bots:
-            bot.send_msg(bot.uuid)
-            if bot.get_ans() != "OK\n":
+            bot.send_msg(bot.uuid+"\n")
+            if bot.get_ans() != "OK":
                 raise ValueError("The bot {bot} isn't happy with his given uuid!".format(bot=bot.name))
 
     def run_game(self):
@@ -76,7 +78,10 @@ class Calebasse(Game):
                 res = b.get_ans()
                 # Analyse answer
                 res = re.search(bets_pattern, res)
-                bet = int(res.group())
+                if res==None:
+                    bet = 0
+                else:
+                    bet = int(res.group())
                 # Can't more than you have
                 wait_for_good_bet = 1 - (bet <= b.account)
             # Storing bets
@@ -86,12 +91,14 @@ class Calebasse(Game):
             b.send_msg("Accepted\n")
 
         # Drawing
-        choice = int(sum(bets.values()) * random.random()) + 1
+        print "bets.values =", bets.values()
+        choice = int((1+sum(bets.values())) * random.random())
         start = 0
-        for uuid in bets:
+        for uuid in bets.keys():
             start += bets[uuid]
+            print start, choice
             if choice <= start:
-                winner = [b for b in  self.bots if b.uuid==uuid_b][0]
+                winner = [b for b in  self.bots if b.uuid==uuid][0]
                 break
         
         # Rewarding the winner
@@ -109,7 +116,7 @@ class Calebasse(Game):
         if len([b for b in self.bots if b.account >0]) == 1:
             self.winner = [b for b in self.bots if b.account >0][0]
         else:
-            raise ValueError("There is more than one player")
+            raise ValueError("There is more than one player left")
 
 
     def give_results(self):
