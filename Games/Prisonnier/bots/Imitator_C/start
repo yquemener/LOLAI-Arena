@@ -1,2 +1,7 @@
 #!/bin/bash
+if [ ! -f /tmp/foo.txt ]
+then
+    g++ main.cpp -o bot
+fi
+
 ./bot
