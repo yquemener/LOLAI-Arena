@@ -46,7 +46,17 @@ def vs():
 def vsmarket():
     """  Webpage which sum up the marke game and traces charts"""
     info = request.forms
-    context = arena.play_game(**info)
+    args = {"game_name": info['game_name']}
+
+    index=0
+    for aname in info.keys():
+        if aname.startswith("bot_"):
+            for i in range(int(info[aname])):
+                args["bot"+str(index)]=aname[4:]
+                index+=1
+
+    print args
+    context = arena.play_game(**args)
     return context
 
 @route('/challenge', method='POST')

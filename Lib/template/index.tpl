@@ -20,12 +20,20 @@
     <input type="text" name="{{elem}}" value='{{games[game][elem][0]}}'/><br/>
     %end
 
+    %if game == "Market":
+    Mix de joueurs:
+    % for b in games[game]["bots"]:
+        <div>Number of bots {{b}} : <input type="input" name="bot_{{b}}" size="5" value="1" id="{{b}}" required/>
+    %end
+    <br/>
+    %else:
     %for i in range(games[game]["players"]):
     Joueur {{i+1}}:
     % for b in games[game]["bots"]:
         <input type="radio" name="bot{{i+1}}" value="{{b}}" id="{{b}}" required/> <label for="{{b}}">{{b}}</label>
     %end
     <br/>
+    %end
     %end
 
     <input type="submit" value="Jouer le match"/>

@@ -85,6 +85,7 @@ class Market(Game):
         i = 0
         for b in self.bots:
             botname = b.name+"_"+str(i)
+            print botname
             self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
             self.players_charts[botname]={"cash":[],
