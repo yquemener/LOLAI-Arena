@@ -27,11 +27,19 @@ class Player:
                 self.farms,
                 self.mills]
 
+    def dstate(self):
+        return {'name':self.name, 
+                 'cash':self.cash,
+                 'wheat':self.wheat,
+                 'flour':self.flour,
+                 'farms':self.farms,
+                 'mills':self.mills}
+
     def __str__(self):
-        return str(self.state())
+        return str(self.dstate())
 
     def __repr__(self):
-        return str(self.state())
+        return str(self.dstate())
 
 
 class Market(Game):

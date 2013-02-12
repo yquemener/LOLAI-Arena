@@ -11,9 +11,6 @@ ins = raw_input()
 myid = ins
 #sys.stderr.write("My id is " + myid + "\n")
 
-if ins!='Q':
-    print '[["buy", "farm",1], ["buy", "mill", 1]]'
-
 ins = raw_input()
 while ins!='Q':
     ws = json.loads(ins)
@@ -25,10 +22,12 @@ while ins!='Q':
     #sys.stderr.write("Sent :" + ins+"\n")
     orders = list()
     flour_max_price = ws[4][7]
-    if ws[4][0]+ws[4][1]<=cash:
-        orders.append('["buy", "farm",1]')
-        orders.append('["buy", "mill",1]')
-        
+    if wheat<50 and flour<50:
+        if ws[4][0]+ws[4][1]<=cash:
+            orders.append('["buy", "farm",1]')
+            orders.append('["buy", "mill",1]')
+            pass
+            
     # compute flour price
     count=0
     avg=0
@@ -52,3 +51,4 @@ while ins!='Q':
     #sys.stderr.write("Sent :" + sso + "\n")
     print sso
     ins = raw_input()
+
