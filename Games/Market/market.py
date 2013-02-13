@@ -257,7 +257,7 @@ class Market(Game):
             # accepted
             buyer = self.players_state[buys[idxb][0]]
             seller = self.players_state[sells[idxs][0]]
-            price = 0.5*(buys[idxb][2] + sells[idxb][2])
+            price = 0.5*(buys[idxb][2] + sells[idxs][2])
             if buys[idxb][1]>sells[idxs][1]:
                 qty=sells[idxs][1]
             else:
