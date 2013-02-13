@@ -14,7 +14,7 @@ from challenge import Challenge
 
 GAMES_PATH = "Games/"
 BOTS_PATH = "bots/"
-ROUND_TIMEOUT = 0.01
+ROUND_TIMEOUT = 0.1
 
 
 class Arena():
