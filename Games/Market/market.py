@@ -79,13 +79,13 @@ class Market(Game):
 
         self.round = int(round)
         self.players_state = dict()
-        self.stats_charts = {"flour_price" : [] }
+        self.stats_charts = {"flour_price" : [],
+                             "wheat_price" : []}
         self.players_charts = dict()
         self.botsid = dict()
         i = 0
         for b in self.bots:
             botname = b.name+"_"+str(i)
-            print botname
             self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
             self.players_charts[botname]={"cash":[],
@@ -137,16 +137,25 @@ class Market(Game):
                 self.players_charts[bn]["cash"].append(pl.cash)
                 self.players_charts[bn]["wheat"].append(pl.wheat)
                 self.players_charts[bn]["flour"].append(pl.flour)
-            avg=0
-            count=0
+            avgf=countf=avgw=countw=0
             for t in self.transactions_done:
-                count+=1
-                avg+=t[2]
-            if count>0:
-                avg/=count
+                if t[4]=="f":
+                    countf+=1
+                    avgf+=t[3]
+                else:
+                    countw+=1
+                    avgw+=t[3]
+                    
+            if countw>0:
+                avgw/=countw
             else:
-                avg=0
-            self.stats_charts["flour_price"].append(avg)
+                avgw=0
+            if countf>0:
+                avgf/=countf
+            else:
+                avgf=0
+            self.stats_charts["flour_price"].append(avgf)
+            self.stats_charts["wheat_price"].append(avgw)
 
     def go(self):
         """Rules of the game
@@ -186,6 +195,10 @@ class Market(Game):
 
         # Running the markets
 
+        """print
+        print "Flour market : "
+        print self.flour_market"""
+        
         # The flour market is easy
         self.flour_market.sort(key=lambda x:-x[3])
         tobuy = self.flour_bought_each_turn
@@ -197,23 +210,23 @@ class Market(Game):
                 if qty >= tobuy:
                     if pl.flour >= tobuy:
                         pl.cash+=tobuy*price
-                        self.transactions_done.append([bn,tobuy,price])
+                        self.transactions_done.append([-1,bn,tobuy,price,'f'])
                         pl.flour-=tobuy
                         tobuy=0
                     else:
                         pl.cash+=pl.flour*price
-                        self.transactions_done.append([bn,pl.flour,price])
+                        self.transactions_done.append([-1,bn,pl.flour,price,'f'])
                         tobuy-=pl.flour
                         pl.flour=0
                 else:
                     if pl.flour>=qty:
                         pl.cash+=qty*price
-                        self.transactions_done.append([bn,qty,price])
+                        self.transactions_done.append([-1,bn,qty,price,'f'])
                         pl.flour-=qty
                         tobuy-=qty
                     else:
                         pl.cash+=pl.flour*price
-                        self.transactions_done.append([bn,pl.flour,price])
+                        self.transactions_done.append([-1,bn,pl.flour,price,'f'])
                         tobuy-=pl.flour
                         pl.flour=0
             i-=1
@@ -225,21 +238,26 @@ class Market(Game):
         # is made half of the way
         buys = list()
         sells = list()
+
         for o in self.wheat_market:
             if o[1]=="buy":
                 buys.append([o[0],o[2],o[3]])
             else:
                 sells.append([o[0],o[2],o[3]])
+        """print
+        print "Wheat market : "
+        print "  Buy orders:\n",buys
+        print "  Sell orders:\n",sells"""
+        
         sells.sort(key=lambda x:x[2])
         buys.sort(key=lambda x:-x[2])
         idxb=0
         idxs=0
-        while(idxb<len(buys) and idxs<len(selld) and buys[idxb][1]>sells[idxs][1]):
+        while(idxb<len(buys) and idxs<len(sells) and buys[idxb][2]>sells[idxs][2]):
             # accepted
             buyer = self.players_state[buys[idxb][0]]
-            seller = self.players_state[sellss[idxs][0]]
+            seller = self.players_state[sells[idxs][0]]
             price = 0.5*(buys[idxb][2] + sells[idxb][2])
-            price = 0.5*(buys[idxb][2] + sells[idxb][2])            
             if buys[idxb][1]>sells[idxs][1]:
                 qty=sells[idxs][1]
             else:
@@ -249,7 +267,15 @@ class Market(Game):
                 buyer.wheat += qty
                 seller.cash += price*qty
                 seller.wheat -= qty
-        # TODO Done transaction to be implemented
+            if qty>=buys[idxb][1]:
+                idxb+=1
+            else:
+                buys[idxb][1]-=qty
+            if qty>=sells[idxs][1]:
+                idxs+=1
+            else:
+                sells[idxs][1]-=qty
+            self.transactions_done.append([-1, -1, qty, price,'w'])
             
             
    
@@ -259,6 +285,7 @@ class Market(Game):
                qty*self.farm_price):
                 self.players_state[botname].cash-=qty*self.farm_price
                 self.players_state[botname].farms+=qty
+                
         if ftype=="mill":
             if(self.players_state[botname].cash >=
                qty*self.mill_price):

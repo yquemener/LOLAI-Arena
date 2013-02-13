@@ -32,8 +32,6 @@ class Game(threading.Thread):
         self.check_name(name)
         self.folder = GAMES_PATH + self.game_name
         self.import_bots(bots)
-        print "__init__" + str(self.bots)
-
         threading.Thread.__init__(self)
         
     def run(self):
@@ -43,7 +41,6 @@ class Game(threading.Thread):
         (requiered by threading)
         
         """
-        print "run",self.bots
         self.init_game()
         self.run_game()
         self.end_game()
@@ -57,7 +54,6 @@ class Game(threading.Thread):
         Initialise game
         
         """
-        print self.bots
         self.start_bots()
         self.ready_bots()
 
@@ -89,9 +85,7 @@ class Game(threading.Thread):
         Start bots
         
         """
-        print "self.bots = "+str(self.bots)
         for bot in self.bots:
-            print bot
             bot.start_bot()
 
     def ready_bots(self):

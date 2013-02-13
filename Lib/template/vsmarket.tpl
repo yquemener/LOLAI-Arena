@@ -13,6 +13,7 @@
     <div id="container_flour" style="width:600px;height:300px;float: left;"></div>
     <div id="container_wheat" style="width:600px;height:300px;float: left;"></div>
     <div id="container_flour_price" style="width:600px;height:300px;float: left;"></div>
+    <div id="container_wheat_price" style="width:600px;height:300px;float: left;"></div>
 </div>
 <h2> {{" vs ".join([b.name for b in bots])}} </h2>
 <p> Résultat final: <br/><br/>
@@ -83,6 +84,21 @@ var f4 = Flotr.draw(
 	    %end
 	    ],
 	    label: "Flour price",
+	    lines: {show: true, fill: true},
+	    points: {show: true}
+	},
+]
+);
+
+
+var f5 = Flotr.draw(
+	$('container_wheat_price'), [
+	{   data: [ 
+	    %for i in range(len(stats_charts["wheat_price"])):
+	        [{{i}}, {{stats_charts["wheat_price"][i]}}],
+	    %end
+	    ],
+	    label: "Wheat price",
 	    lines: {show: true, fill: true},
 	    points: {show: true}
 	},

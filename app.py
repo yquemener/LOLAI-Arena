@@ -55,7 +55,6 @@ def vsmarket():
                 args["bot"+str(index)]=aname[4:]
                 index+=1
 
-    print args
     context = arena.play_game(**args)
     return context
 

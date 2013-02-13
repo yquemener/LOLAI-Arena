@@ -23,7 +23,11 @@
     %if game == "Market":
     Mix de joueurs:
     % for b in games[game]["bots"]:
-        <div>Number of bots {{b}} : <input type="input" name="bot_{{b}}" size="5" value="1" id="{{b}}" required/>
+        % if b in ["FarmerBoy", "Meunier", "IBot"]:
+            <div>Number of bots {{b}} : <input type="text" name="bot_{{b}}" size="5" value="1" id="{{b}}" required>
+        %else:
+            <div>Number of bots {{b}} : <input type="text" name="bot_{{b}}" size="5" value="0" id="{{b}}" required>
+        %end
     %end
     <br/>
     %else:
