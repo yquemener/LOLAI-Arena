@@ -12,7 +12,7 @@ ROUND_TIMEOUT = 0.01
 
 class Player:
     def __init__(self, name):
-        self.cash = 200
+        self.cash = 100
         self.farms = 0
         self.mills = 0
         self.wheat = 0
@@ -57,11 +57,13 @@ class Market(Game):
         self.farm_price = 20
         self.mill_price = 85
         self.transformation_rate = 1.0
-        self.growing_cycle = 100
+        self.growing_cycle = 1
         self.flour_bought_each_turn = 50
         self.farm_production = 1
         self.mill_production = 1
         self.flour_max_price = 10
+        self.farm_cost = 1
+        self.mill_cost = 1
 
         # Initialization of the markets
         self.wheat_market=list()
@@ -192,9 +194,10 @@ class Market(Game):
             transformed = min(pl.mills*self.mill_production, pl.wheat)
             pl.flour += transformed
             pl.wheat -= transformed
+            pl.cash -= pl.farms*self.farm_cost
+            pl.cash -= pl.mills*self.mill_cost
 
         # Running the markets
-
         """print
         print "Flour market : "
         print self.flour_market"""
@@ -277,8 +280,19 @@ class Market(Game):
                 sells[idxs][1]-=qty
             self.transactions_done.append([-1, -1, qty, price,'w'])
             
-            
+        # Eliminating bankrupted bots    
+        
+        eliminated = list()
+        for bn in self.players_state.keys():
+            pl = self.players_state[bn]
+            if(pl.cash<0):
+                eliminated.append(bn)
+
+        for e in eliminated:
+            self.players_state.pop(e)
+            self.botsid.pop(e)
    
+
     def buy_facility(self, botname, ftype, qty):
         if ftype=="farm":
             if(self.players_state[botname].cash >=
