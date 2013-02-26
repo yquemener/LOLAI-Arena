@@ -1,88 +1,134 @@
 #!/usr/bin/env python2
 #-*- coding:utf8-*-  
 
-# MAkes mills, buys wheat and sells flour
+# Makes mills, buys wheat and sells flour
+
+def botlog(s):
+    sys.stderr.write(str(s)+"\n")
+
+def get_avg_price(transactions, default_price=5.0):
+    avgw=0
+    avgf=0
+    countw=0
+    countf=0
+    for (id_buyer, id_seller, qty, price, wf) in transactions:
+        if(wf=="w"):
+            countw+=1
+            avgw+=price
+        if(wf=="f"):
+            countf+=1
+            avgf+=price
+    if countw>0:
+        avgw/=countw
+    else:
+        avgw = default_price
+    if countf>0:
+        avgf/=countf
+    else:
+        avgf = default_price
+    return (avgw,avgf)
+
+def send_orders(orders):
+    sso = "[ "
+    for o in orders:
+        sso=sso+o+","
+    sso = sso[:-1]+"]"
+    print sso
+
+price_belief = 5.0
 
 import sys
 import json
 import random
 
+# Tell the server we are ready
 print "OK"
 
+# Makes the server display a log message 
+botlog("We are OK")
+
+# Get the ID back
 ins = raw_input()
 myid = ins
-#sys.stderr.write("My id is " + myid + "\n")
-lastwheatprice = 5.0
-lastflourprice = 9.9
+
+# Get the first input
 ins = raw_input()
+
+# An input of 'Q' means that the bot must return
 while ins!='Q':
-    ws = json.loads(ins)
-    for idx in range(len(ws[0])):
-        if(ws[0][idx][0]==myid):
-            mystate = ws[0][idx]
-            (n, cash, wheat, flour, farms, mills) = mystate
-    #sys.stderr.write("My state :"+str(mystate)+"\n")
-    #sys.stderr.write("Sent :" + ins+"\n")
+    (players_state, 
+            wheat_market, 
+            flour_market, 
+            transactions, 
+            useful_stats) = json.loads(ins)
+
+    (farm_price,
+            mill_price,
+            transformation_rate,
+            growing_cycle,
+            flour_bought_each_turn,
+            farm_production,
+            mill_production,
+            flour_max_price) = useful_stats
+
+    for state in players_state:
+        (idx, cash, wheat, flour, farms, mills) = state
+        if(idx==myid):
+            mystate = state
+            break
+
+    # compute wheat price
+    (wheat_price, flour_price) = get_avg_price(transactions, price_belief)
+
     orders = list()
-    flour_max_price = ws[4][7]
+
+    # Simple investment strategy : if we have twice the necessary cash, 
+    # more wheat we can process in 2 turns and not an oversized stock of
+    # flour, we buy one new mill
     if flour<50 and wheat>mills*2:
-        if ws[4][1]*2<=cash:
+        if mill_price*2<=cash:
             orders.append('["buy", "mill",1]')
             
-    if mills==0 and ws[4][1]<=cash:
+    # Also buy a mill if we don't have one
+    if mills==0 and mill_price<=cash:
         orders.append('["buy", "mill",1]')
             
-    # compute flour price
-    count=0
-    avg=0
-    for t in ws[3]:
-        if(t[4]=="f"):
-            count+=1
-            avg+=t[3]    
-    if count>0:
-        avg/=count
-    else:
-        avg=lastflourprice
-    flour_price = avg
-    lastflourprice = avg
+    lastflourprice = flour_price
 
     factor = 1.0
+    # If we have too much flour, try to lower the price to sell it more quickly,
+    # otherwise, raise the price
     if(flour>10):
         factor = 0.9
     else:
         factor = 1.1
-    # To avoid totally synchronous reactions
+    # Add some randomness to avoid totally synchronous reactions
     factor *= random.randint(950,1050)/1000.0
 
     askpriceflour = factor * flour_price
+    
+    # Make sure to not ask more than the maximum price for flour
     if askpriceflour>flour_max_price:
         askpriceflour=flour_max_price-0.01
 
 
-    
-    # compute wheat price
-    count=0
-    avg=0
-    for t in ws[3]:
-        if(t[4]=="w"):
-            count+=1
-            avg+=t[3]    
-    if count>0:
-        avg/=count
-    else:
-        avg=lastwheatprice
-
-    wheat_price = avg
     lastwheatprice = wheat_price
+    # Add some randomness to avoid totally synchronous reactions
     factor = random.randint(950,1050)/1000.0
+    # If we have less wheat than we can process, raise the price we are
+    # ready to pay
     if wheat<mills:
         factor += 0.1
-    if avg*factor>10.0:
-        factor = 9.9/avg
-        
     askpricewheat=wheat_price*factor
+
+    # Make sure we are not buying for more that the maximum flour price
+    if askpricewheat>flour_max_price:
+        askpricewheat = 9.9
+        
     
-    wheatquantity = (cash - ws[4][1]*2)/askpricewheat
+    # We buy enough wheat to keep enough cash to buy two mills
+    wheatquantity = (cash - mill_price*2)/askpricewheat
+    # If that means zero, we just buy half what we can buy
     if(wheatquantity<0):
         wheatquantity = (cash/(2*askpricewheat))
     
@@ -91,15 +137,8 @@ while ins!='Q':
             orders.append('["sell","flour",'+str(flour)+','+str(askpriceflour)+']')
         if(mills>0) and wheatquantity>0:
             orders.append('["buy","wheat",'+str(wheatquantity)+','+str(askpricewheat)+']')
+    
+    send_orders(orders)
 
-
-        
-
-    sso = "[ "
-    for o in orders:
-        sso=sso+o+","
-    sso = sso[:-1]+"]"
-    #sys.stderr.write("Sent :" + sso + "\n")
-    print sso
     ins = raw_input()
 

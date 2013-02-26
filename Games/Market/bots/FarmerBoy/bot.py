@@ -72,7 +72,7 @@ while ins!='Q':
             flour_max_price) = useful_stats
 
     for state in players_state:
-        (idx, cash, wheat, flour, farms, mill) = state
+        (idx, cash, wheat, flour, farms, mills) = state
         if(idx==myid):
             mystate = state
             break
