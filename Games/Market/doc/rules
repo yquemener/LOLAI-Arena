@@ -71,7 +71,15 @@ successful_transactions = [
 ...
 ]
 
-useful_stats = [wheat_last_price, flour_last_price, wheat_volume_sold, flour_volume_sold, total_production_wheat, total_production_flour]
+useful_stats = [farm_price,
+                mill_price,
+                transformation_rate,
+                growing_cycle
+                flour_bought_each_turn,
+                farm_production,
+                mill_production,
+                flour_max_price
+                ]
 
 Actions to be done at the next turn are to be sent as a list :
 
