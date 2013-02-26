@@ -26,7 +26,7 @@ The player must have enough stock or cash to honor all his proposals. Otherwise,
 
 Every turn, markets are reset. If a player has failed a transaction and want to try it again, it must resend it.
 
-Every 100 turns, farms produce wheat. 
+Every turn, farms produce wheat. 
 Every turn mills turn a quantity of wheat into flour.
 Farms and mills are sold instantaneously at a set price (Pf and Pm).
 
