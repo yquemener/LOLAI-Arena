@@ -13,7 +13,6 @@ Possible actions :
     - sell a farm
     - buy a mill
     - sell a mill
-    - transform X tons of wheat into flour 
 
 Each turn, every agent put its orders that are then executed simultaneously. If two identical orders are put on a market, they are served in a random order.
 
