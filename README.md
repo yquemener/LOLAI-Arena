@@ -18,3 +18,6 @@ Bots
 
 To create a bot, make a subdirectory in Games/{game_name}/bots/ and follow the instructions in Games/{game_name}/doc/protocol.
 See in Games/Prisonnier/bots/ for examples.
+
+
+![Arrow](doc/pics/arrow.png)
