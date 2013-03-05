@@ -6,6 +6,7 @@
 # ------------------------------ 
 
 import os
+import sys
 from challenge import Challenge
 
 # ------------------------------
@@ -90,6 +91,8 @@ class Arena():
         game = Game(bots, **args)
         game.start()
         game.join(ROUND_TIMEOUT * 200)
+        if game.isAlive():
+            sys.stderr.write("Warning : Game timed out")
         return game.give_results()
 
     def play_challenge(self, **args):

@@ -13,14 +13,18 @@ print "OK"
 
 while raw_input()!='Q':
     # get accounts
-    accounts =json.loads(raw_input()) 
+    s=raw_input()
+    print "__",s
+    accounts =json.loads(s) 
 
     # go to bets
     while raw_input() != "Accepted":
-        print min(account[uuid],5)
+        print min(accounts[uuid],5)
 
     # Get bets of everybody
-    bets = json.loads(raw_input())
+    s=raw_input()
+    print "__",s
+    bets = json.loads(s)
 
     # Get the winner
     winner = json.loads(raw_input())

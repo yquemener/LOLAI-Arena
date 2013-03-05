@@ -1,0 +1,83 @@
+Market Game
+===========
+
+Rules
+-----
+
+This is a game for many simultaneous players in competition with each other.
+This game is a simple economic simulation where players will produce a raw good (wheat), transform it (into flour) and sell the final product to consumers. Alternatively, they can seek profit by selling wheat or flour to each other.
+
+Possible actions :
+    - put an offer (buy or sell X volume at Y price) on a market
+    - buy a farm
+    - sell a farm
+    - buy a mill
+    - sell a mill
+    - transform X tons of wheat into flour 
+
+Each turn, every agent put its orders that are then executed simultaneously. If two identical orders are put on a market, they are served in a random order.
+
+There are two markets : the flour market and the wheat market. 
+
+Each turn, consumers are simulated by buying N tons of flour on the flour market, at the lowest prices available. They will buy less if the total volume on the market is unsufficient. Players can buy and sell on this market. Consumers are processed first, so players will only be able to buy if there are more than N tons of flour to be sold.
+
+On the wheat market, only players buy and sell. Players put offers on the market, announcing a quantity and a desired price. Each turn, offers are matched, starting with lowest selling prices and the highest buying prices. If the buying price is higer than the selling price, the offers are matched. If the quantity sold exceed the quantity bought, the transaction is made at the price of the buyer and vice versa. In case of draw, an average is made. The completed offer is removed and the process reiterated until no two offers match.
+
+The player must have enough stock or cash to honor all his proposals. Otherwise, some or all of his propositions will be ignored. 
+
+Every turn, markets are reset. If a player has failed a transaction and want to try it again, it must resend it.
+
+Every 100 turns, farms produce wheat. 
+Every turn mills turn a quantity of wheat into flour.
+Farms and mills are sold instantaneously at a set price (Pf and Pm).
+
+The game is information complete : each player knows all the offers on the market, the stocks of all the other players, their quantity of farms, warehouses and mills and their quantity of cash.
+
+In order to prevent "last turn" strategies, the number of rounds is kept secret and is determined randomly at the beginning of the game. It is between 2000 and 5000 
+
+Protocol
+--------
+
+When the bot has finished loading, it should print "OK\n" to stdout.
+It will then be attributed an id, sent as a string ended by a newline.
+It must answer "OK\n" when done.
+
+Information will be sent as a JSON string to the bots at each turn. It should be only ASCII characters but always assume unicode anyway.
+
+[players_state,
+ wheat_market,
+ flour_market,
+ successful_transactions,
+ useful_stats]
+
+players_state = 
+[[id, cash, wheat_stock, flour_stock, farms, mills],
+ [id2, ...],
+ ...
+ ]
+
+wheat_market = 
+[[id, sell|buy, quantity, price],
+ ...
+ ]
+
+flour_market = 
+[[id, sell|buy, quantity, price],
+...
+]
+
+successful_transactions = [
+[id_buyer, id_seller, quantity, price,  wheat/flour]
+...
+]
+
+useful_stats = [wheat_last_price, flour_last_price, wheat_volume_sold, flour_volume_sold, total_production_wheat, total_production_flour]
+
+Actions to be done at the next turn are to be sent as a list :
+
+[action1,
+action2,
+...]
+action = [buy|sell farm|mill quantity]
+	 [buy|sell wheat|flour quantity price] 
+

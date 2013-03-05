@@ -24,7 +24,7 @@ while raw_input()!='Q':
 
     # go to bets
     while raw_input() != "Accepted":
-        print account[uuid]
+        print accounts[uuid]
 
     # Get bets of everybody
     bets = json.loads(raw_input())
