@@ -1,15 +1,22 @@
 #!/usr/bin/env python2
 #-*- coding:utf8-*-  
 import json
+import sys
 
 # The bot is initialized
 print "OK"
 
+sys.stderr.write("Inite\n")
+
 # Getting his id
 uuid = raw_input()
+sys.stderr.write("UUID\n")
 
 # Ready to start
 print "OK"
+sys.stderr.write("Ready\n")
+
+
 
 while raw_input()!='Q':
     # get accounts
