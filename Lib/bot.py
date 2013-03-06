@@ -67,7 +67,7 @@ class Bot(object):
         """
         self.proc.stdin.write(msg+"\n")
 
-#TODO: rename get_ans to get_answer!!!
+    #TODO: rename get_ans to get_answer!!!
     def get_ans(self):
         """Gets the answer of the bot
         
@@ -75,6 +75,13 @@ class Bot(object):
         
         """
         return self.proc.stdout.readline().rstrip()
+
+    def __str__(self):
+        """ Surcharge pour un beau print sur les bots
+
+        @return: 
+        """
+        pass
 
 
 # ------------------------------
