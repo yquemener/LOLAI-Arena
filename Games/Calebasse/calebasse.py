@@ -46,7 +46,7 @@ class Calebasse(Game):
 
         # Their uuid
         for bot in self.bots:
-            bot.send_msg(bot.uuid+"\n")
+            bot.send_msg(bot.uuid)
             if bot.get_ans() != "OK":
                 raise ValueError("The bot {bot} isn't happy with his given uuid!".format(bot=bot.name))
 
@@ -55,11 +55,11 @@ class Calebasse(Game):
         
         """
         # The game finish when there is only one player left
-        while len([b for b in self.bots if b.account >0]) > 1:
+        while len([b for b in self.bots if b.account > 0]) > 1:
             self.steady_bots()
             self.round()
 
-        self.end()
+        self.end_game()
 
     def steady_bots(self):
         """Sends to bots the new round message
@@ -75,8 +75,9 @@ class Calebasse(Game):
         acounts = self.get_accounts()
         # Bets of players
         bets = {}
-        bets_pattern = """(\d+)"""
+        bets_pattern = """(\d+)""" # Why do we use parenthesis?
         for b in self.bots:
+            # While the bet of the player is not possible, Calebasse ask it again
             wait_for_good_bet = 1
             while wait_for_good_bet:
                 # Sending accounts
@@ -99,12 +100,11 @@ class Calebasse(Game):
             b.send_msg("Accepted")
 
         # Drawing
-        print "bets.values =", bets.values()
+        print "Calebasse: bets.values =", bets.values()
         choice = int((1+sum(bets.values())) * random.random())
         start = 0
         for uuid in bets.keys():
             start += bets[uuid]
-            print start, choice
             if choice <= start:
                 winner = [b for b in  self.bots if b.uuid==uuid][0]
                 break
@@ -135,6 +135,7 @@ class Calebasse(Game):
         
         """
         self.det_winner()
+        print "Calebasse: ", str({'bots': self.bots, 'winner': self.winner})
         return {'bots': self.bots, 'winner': self.winner}
 
     # --------------------------

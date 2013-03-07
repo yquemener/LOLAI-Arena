@@ -16,8 +16,6 @@ print "OK"
 
 playing = raw_input()
 sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
-playing = raw_input()
-sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
 while (playing!='Q'):
     # get accounts
     accounts_raw = raw_input()
