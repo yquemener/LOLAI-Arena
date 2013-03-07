@@ -32,6 +32,7 @@ class Game(threading.Thread):
         self.check_name(name)
         self.folder = GAMES_PATH + self.game_name
         self.import_bots(bots)
+        print "__init__" + str(self.bots)
 
         threading.Thread.__init__(self)
         
@@ -75,7 +76,7 @@ class Game(threading.Thread):
         self.end_bots()
 
         # Attention non déclaré pour le moment
-        self.det_winner()
+        self.give_results()
 
     # -------------------
     # Communication with bots
@@ -86,7 +87,9 @@ class Game(threading.Thread):
         Start bots
         
         """
+        print "self.bots = "+str(self.bots)
         for bot in self.bots:
+            print bot
             bot.start_bot()
 
     def ready_bots(self):
@@ -105,7 +108,7 @@ class Game(threading.Thread):
         
         """
         for bot in self.bots:
-            bot.send_msg("Q\n")
+            bot.send_msg("Q")
         
     # -------------------
     # Description of the game
@@ -153,12 +156,13 @@ class Game(threading.Thread):
         
         Import bots which should be in self.bots_path
 
-        @param bots: list of games name
+        @param bots: list of bots name
         
         """
         self.bots = [] 
         for b in bots:
             self.bots += [Bot(b, self.bots_path)]
+
     def det_winner(self):
         """ Docstring for det_winner
         
