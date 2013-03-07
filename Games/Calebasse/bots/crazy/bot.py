@@ -1,33 +1,48 @@
 #!/usr/bin/env python2
 #-*- coding:utf8-*-  
+
 import json
 import sys
 
 # The bot is initialized
 print "OK"
 
-sys.stderr.write("Inite\n")
-
 # Getting his id
 uuid = raw_input()
-sys.stderr.write("UUID\n")
 
 # Ready to start
 print "OK"
-sys.stderr.write("Ready\n")
 
 
-
-while raw_input()!='Q':
+playing = raw_input()
+sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
+while (playing!='Q'):
     # get accounts
-    accounts =json.loads(raw_input()) 
-
+    accounts_raw = raw_input()
+    sys.stderr.write("{uuid} receives {accounts_r}\n".format(uuid=uuid, accounts_r = accounts_raw))
+    accounts = json.loads(accounts_raw)
+    
     # go to bets
-    while raw_input() != "Accepted":
-        print accounts[uuid]
+    ready = raw_input()
+    while (ready != "Accepted"):
+        # This player gives never more than 5
+        print min(accounts[uuid],5)
 
+:q
+        ready = raw_input()
+        
     # Get bets of everybody
-    bets = json.loads(raw_input())
+    bets_raw = raw_input()
+    sys.stderr.write("{uuid} recieves bets of everybody {bets_r}".format(uuid=uuid, bets_r=bets_raw))
+    bets = json.loads(bets_raw)
 
     # Get the winner
     winner = json.loads(raw_input())
+
+    playing = raw_input()
+    sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
+
+# -----------------------------
+# Reglages pour 'vim'
+# vim:set autoindent expandtab tabstop=4 shiftwidth=4:
+# cursor: 16 del 
