@@ -8,12 +8,6 @@
 
 <body>
 <h1> LoL Arena </h1>
-<div>
-    <div id="container_cash" style="width:600px;height:300px;float: left;"></div>
-    <div id="container_flour" style="width:600px;height:300px;float: left;"></div>
-    <div id="container_wheat" style="width:600px;height:300px;float: left;"></div>
-    <div id="container_flour_price" style="width:600px;height:300px;float: left;"></div>
-</div>
 <h2> {{" vs ".join([b.name for b in bots])}} </h2>
 <p> Résultat final: <br/><br/>
 %for b in bots:
@@ -21,6 +15,10 @@
 %end
 <center> {{winner}} </center>
 </p>
+<div id="container_cash" style="width:600px;height:300px;float: left;"></div>
+<div id="container_flour" style="width:600px;height:300px;float: left;"></div>
+<div id="container_wheat" style="width:600px;height:300px;float: left;"></div>
+<div id="container_flour_price" style="width:600px;height:300px;float: left;"></div>
 <p> <a href="/"> Retour à l'arène </a> </p>
 </body>
 
