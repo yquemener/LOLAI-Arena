@@ -12,15 +12,12 @@ import uuid
 # ------------------------------
 # Classes
 # ------------------------------ 
-BOTS_PATH = "Games/Prisonnier/bots/"
-#TODO: Il faudra enlever BOTS_PATH!!!
-        
 
 class Bot(object):
     """Bot class
     
     """
-    def __init__(self, name, bots_path=BOTS_PATH):
+    def __init__(self, name, bots_path):
         """Initiates bot class
 
         @param name: the name of the bot (which correspond to the name of the folder)
