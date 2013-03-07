@@ -43,7 +43,6 @@ class Game(threading.Thread):
         (requiered by threading)
         
         """
-        print "run",self.bots
         self.init_game()
         self.run_game()
         self.end_game()
@@ -57,7 +56,6 @@ class Game(threading.Thread):
         Initialise game
         
         """
-        print self.bots
         self.start_bots()
         self.ready_bots()
 
@@ -78,7 +76,7 @@ class Game(threading.Thread):
         self.end_bots()
 
         # Attention non déclaré pour le moment
-        self.det_winner()
+        self.give_results()
 
     # -------------------
     # Communication with bots
@@ -110,7 +108,7 @@ class Game(threading.Thread):
         
         """
         for bot in self.bots:
-            bot.send_msg("Q\n")
+            bot.send_msg("Q")
         
     # -------------------
     # Description of the game
