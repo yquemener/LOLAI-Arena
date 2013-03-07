@@ -1,3 +1,7 @@
+This is a generic documentation about bots.
+A specific documentation about the rules of each game can be found in Games/[Name of Game]/doc
+
+
 Bots must use stdin and stdout as communication channels. 
     In Python, that means outputing with print, inputing with raw_input()
     In C++, that means using cout and cin

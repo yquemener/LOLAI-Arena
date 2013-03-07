@@ -86,5 +86,20 @@ var f4 = Flotr.draw(
 	},
 ]
 );
+
+
+var f5 = Flotr.draw(
+	$('container_wheat_price'), [
+	{   data: [ 
+	    %for i in range(len(stats_charts["wheat_price"])):
+	        [{{i}}, {{stats_charts["wheat_price"][i]}}],
+	    %end
+	    ],
+	    label: "Wheat price",
+	    lines: {show: true, fill: true},
+	    points: {show: true}
+	},
+]
+);
 </script>
 

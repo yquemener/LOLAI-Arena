@@ -13,10 +13,8 @@ int main ()
 
     string master;
     cin >> master;
-    cerr << "master: " << master << endl;
-
-    while(master != "Q\n"){
-        cerr << "nouvelle boucle" << endl;
+    
+    while(master != "Q"){
         ans = other;
         cout << ans << endl;
         cin >> other;

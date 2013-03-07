@@ -15,7 +15,7 @@ from challenge import Challenge
 
 GAMES_PATH = "Games/"
 BOTS_PATH = "bots/"
-ROUND_TIMEOUT = 0.01
+ROUND_TIMEOUT = 0.1
 
 
 class Arena():
@@ -92,7 +92,7 @@ class Arena():
         game.start()
         game.join(ROUND_TIMEOUT * 200)
         if game.isAlive():
-            sys.stderr.write("Warning : Game timed out")
+            raise ValueError("Bot timed out")
         return game.give_results()
 
     def play_challenge(self, **args):
