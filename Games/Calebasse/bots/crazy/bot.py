@@ -16,6 +16,8 @@ print "OK"
 
 playing = raw_input()
 sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
+playing = raw_input()
+sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
 while (playing!='Q'):
     # get accounts
     accounts_raw = raw_input()
@@ -24,20 +26,21 @@ while (playing!='Q'):
     
     # go to bets
     ready = raw_input()
+    sys.stderr.write("{uuid} receives 'ready' {ready}\n".format(uuid=uuid, ready=ready))
     while (ready != "Accepted"):
-        # This player gives never more than 5
-        print min(accounts[uuid],5)
-
-:q
+        # This player gives all he has
+        print accounts[uuid]
         ready = raw_input()
+        sys.stderr.write("{uuid} receives 'ready' {ready}\n".format(uuid=uuid, ready=ready))
         
     # Get bets of everybody
     bets_raw = raw_input()
-    sys.stderr.write("{uuid} recieves bets of everybody {bets_r}".format(uuid=uuid, bets_r=bets_raw))
+    sys.stderr.write("{uuid} receives bets of everybody {bets_r}\n".format(uuid=uuid, bets_r=bets_raw))
     bets = json.loads(bets_raw)
 
     # Get the winner
-    winner = json.loads(raw_input())
+    winner_r = raw_input()
+    sys.stderr.write("{uuid} receives the winner {winner}\n".format(uuid=uuid, winner=winner_r))
 
     playing = raw_input()
     sys.stderr.write("{uuid} receives as playing {playing}\n".format(uuid=uuid, playing = playing))
