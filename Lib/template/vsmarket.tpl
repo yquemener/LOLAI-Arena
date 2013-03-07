@@ -19,6 +19,7 @@
 <div id="container_flour" style="width:600px;height:300px;float: left;"></div>
 <div id="container_wheat" style="width:600px;height:300px;float: left;"></div>
 <div id="container_flour_price" style="width:600px;height:300px;float: left;"></div>
+
 <p> <a href="/"> Retour à l'arène </a> </p>
 </body>
 
@@ -28,11 +29,7 @@
 var f = Flotr.draw(
 	$('container_cash'), [
 %for b in players_charts.keys():
-	{   data: [ 
-	    %for i in range(len(players_charts[b]["cash"])):
-	        [{{i}}, {{players_charts[b]["cash"][i]}}],
-	    %end
-	    ],
+	{   data: {{[[i,data] for (i,data) in enumerate(players_charts[b]["cash"]]}},
 	    label: "{{b}}'s cash",
 	    lines: {show: true, fill: true},
 	    points: {show: true}
@@ -40,6 +37,28 @@ var f = Flotr.draw(
 %end	
 ]
 );
+
+// Ici ça serai plus simple de mettre tout l'historique de l'évolution de cette "richesse" directement dans le bot pour pouvoir importer les data avec 
+// 		data: b.history[data_name]
+// Par contre cela nécéssite de faire un systeme pour que les bots enregistrent eux même leurs historiques.
+//
+// Ensuite on pourrai faire une liste (donnée par arena.py) des données à tracer sur des graphiques et on aurait plus qu'à boucler dessus pour creer les graphiques.
+//
+// Et même que la création de graphique pourrai être faire dans une fonction js du genre
+// plot_data(data_name) ...
+// 		var f = Flotr.draw(
+// 			$('container_data_name'), [
+// 		%for b in players_charts.keys():
+// 			{   data: {{b.data[data_name]}} // je vois un potentiel soucis ici!
+// 			    label: "{{b.name}}'s cash",
+// 			    lines: {show: true, fill: true},
+// 			    points: {show: true}
+// 			},
+// 		%end	
+// 		]
+// 		);
+//
+// Mais avant de faire tout ça il faut faire une bon système d'historique dans les bots!
 
 var f2 = Flotr.draw(
 	$('container_wheat'), [
