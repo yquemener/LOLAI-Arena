@@ -81,7 +81,7 @@ class Bot(object):
 
         @return: 
         """
-        pass
+        return "Bot {name} num: {uuid}".format(name = self.name , uuid = self.uuid)
 
 
 # ------------------------------
