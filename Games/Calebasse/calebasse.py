@@ -100,7 +100,6 @@ class Calebasse(Game):
             b.send_msg("Accepted")
 
         # Drawing
-        print "Calebasse: bets.values =", bets.values()
         choice = int((1+sum(bets.values())) * random.random())
         start = 0
         for uuid in bets.keys():
@@ -135,7 +134,6 @@ class Calebasse(Game):
         
         """
         self.det_winner()
-        print "Calebasse: ", str({'bots': self.bots, 'winner': self.winner})
         return {'bots': self.bots, 'winner': self.winner}
 
     # --------------------------
