@@ -13,6 +13,8 @@ import uuid
 # Classes
 # ------------------------------ 
 
+DEBUG = {"send" = 1}
+
 class Bot(object):
     """Bot class
     
@@ -64,6 +66,9 @@ class Bot(object):
         """
         self.proc.stdin.write(msg+"\n")
 
+        if DEBUG["send"]:
+            print "Send to bot {bot}: \n\t {msg}".format(bot = self.name, masg = msg)
+
     #TODO: rename get_ans to get_answer!!!
     def get_ans(self):
         """Gets the answer of the bot
@@ -74,9 +79,9 @@ class Bot(object):
         return self.proc.stdout.readline().rstrip()
 
     def __str__(self):
-        """ Surcharge pour un beau print sur les bots
+        """ Overload __str__ to get a nice print
 
-        @return: 
+        @return: nice presentation
         """
         return "Bot {name} num: {uuid}".format(name = self.name , uuid = self.uuid)
 
