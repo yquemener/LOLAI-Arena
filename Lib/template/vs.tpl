@@ -14,12 +14,13 @@
 %if "score" in bots[1].__dict__:
 		%for b in bots:
 				{{b.name}} : {{b.score}}
+				<p>History: {{b.hist_account}} </p> 
 		%end
 %end
 <center> And the winner is {{winner}} </center>
 </p>
 
-<div id="container_account" style="width:600px;height:300px;float: left;"></div>
+<div id="container_account" style="width:600px;height:300px;"></div>
 
 <p> <a href="/"> Retour à l'arène </a> </p>
 
