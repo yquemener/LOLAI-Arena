@@ -12,14 +12,41 @@ import uuid
 # ------------------------------
 # Classes
 # ------------------------------ 
+DEBUG = {"send" : 1}
 
-DEBUG = {"send" = 1}
+class HistoryData(object):
+    """ Descriptor. It will allow to store automaticaly some data on update
+    
+    It should work like that
+    o = Object() # any object
+    o.attribute = HistoryData()
+    o.attribute = 2     # call __set__ of HistoryData and sets attribute to 2 and sets o.history[attribute] to [2] 
+    o.attribute = 3     # call __set__ of HistoryData and sets attribute to 3 and sets o.history[attribute] to [2,3] 
+    
+    """
+    def __init__(self, attribute, value=None):
+        self.value = value
+        self.history = []
+
+    def __get__(self, obj, objtype):
+        print "------------------"
+        print "Now: {val}".format(val = self.value)
+        print "History: {hist}".format(hist = self.history)
+        return self.value
+
+    def __set__(self, obj, value):
+        # Saving old value
+        self.history.append(value)
+        # Setting the new one
+        self.value = value
+
 
 class Bot(object):
     """Bot class
     
     """
-    def __init__(self, name, bots_path):
+
+    def __init__(self, name, bots_path, attributes_hist = []):
         """Initiates bot class
 
         @param name: the name of the bot (which correspond to the name of the folder)
@@ -29,6 +56,9 @@ class Bot(object):
         self.check_name(name, bots_path)
         self.uuid = str(uuid.uuid4())
         self.score = 0
+
+        for att in attributes_hist:
+            self.__setattr__(att, HistoryData(att))
         
     def check_name(self, name, bots_path):
         """Checks if the name correspond to a folder containing program
@@ -86,6 +116,7 @@ class Bot(object):
         return "Bot {name} num: {uuid}".format(name = self.name , uuid = self.uuid)
 
 
+
 # ------------------------------
 # Fonctions
 # ------------------------------ 
@@ -95,7 +126,15 @@ class Bot(object):
 # ------------------------------
 
 if __name__ == '__main__':
-    pass
+    b = Bot("shy", "../Games/Calebasse/bots/", ['ble'])
+    print b
+    #b.ble = HistoryData("ble")
+    b.ble = 2
+    b.ble
+    b.ble = 3
+    b.ble
+    b.ble += 4
+    b.ble
 
 # ------------------------------
 # Fin du programme
