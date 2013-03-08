@@ -14,40 +14,10 @@ import uuid
 # ------------------------------ 
 DEBUG = {"send" : 1}
 
-class HistoryData(object):
-    """ Descriptor. It will allow to store automaticaly some data on update
-    
-    It should work like that
-    o = Object() # any object
-    o.attribute = HistoryData()
-    o.attribute = 2     # call __set__ of HistoryData and sets attribute to 2 and sets o.history[attribute] to [2] 
-    o.attribute = 3     # call __set__ of HistoryData and sets attribute to 3 and sets o.history[attribute] to [2,3] 
-    
-    """
-    def __init__(self, attribute, value=None):
-        if value != None:
-            self.history = [value]
-
-    def __get__(self, obj, objtype):
-        print "------------------"
-        print "Now: {val}".format(val = self.history[-1])
-        print "History: {hist}".format(hist = self.history)
-        return self.history[-1]
-
-    def __set__(self, obj, value):
-        # Saving old value
-        self.history.append(value)
-
-    def get_history(self):
-        return self.history
-
-
 class Bot(object):
     """Bot class
     
     """
-
-    plop = HistoryData('plop', 4)
 
     def __init__(self, name, bots_path, attributes_hist = []):
         """Initiates bot class
@@ -61,7 +31,7 @@ class Bot(object):
         self.score = 0
 
         for attr in attributes_hist:
-            setattr(self.__class__ , attr, HistoryData(attr,0))
+            self.add_hist_property(attr)
         
     def check_name(self, name, bots_path):
         """Checks if the name correspond to a folder containing program
@@ -119,6 +89,38 @@ class Bot(object):
         return "Bot {name} num: {uuid}".format(name = self.name , uuid = self.uuid)
 
 
+    def add_hist_property(self, attribute):
+        # create local setter and getter with a particular attribute name 
+        getter = lambda self: self._get_hist_property(attribute)
+        setter = lambda self, value: self._set_hist_property(attribute, value)
+
+        # construct property attribute and add it to the class
+        setattr(self.__class__, attribute, property(fget=getter, \
+                                                    fset=setter, \
+                                                    doc="Auto-generated method"))
+        setattr(self, "hist_" + attribute, [])
+        # I would like to understand the difference between self and self.__class__ in this example
+
+    def _set_hist_property(self, attribute, value):
+        print "--------------------------"
+        print "Setting: %s = %s" %(attribute, value)
+        setattr(self, "_" + attribute, value)    
+
+        print "Add to history ({hist})".format(hist = getattr(self, "hist_"+attribute))
+        getattr(self, "hist_"+attribute).append(value)
+        print "History-> {hist}".format(hist = getattr(self, "hist_"+attribute))
+        print self.__dict__
+        print "--------------------------"
+
+    def _get_hist_property(self, attribute):
+        print "Getting: %s" %attribute
+        if ("_"+attribute) in self.__dict__:
+            print "It is {val}".format(val=getattr(self,"_"+ attribute))
+            return getattr(self,"_"+ attribute)
+        else:
+            return None
+
+
 
 # ------------------------------
 # Fonctions
@@ -135,22 +137,12 @@ if __name__ == '__main__':
     print b.ble
     print b.__dict__
     b.ble = 2
+    b._ble
     b.ble
     b.ble = 3
-    b.ble
+    b._ble
     b.ble += 4
     b.ble
-
-    print b.__dict__
-    print b.plop
-    b.plop = 2
-    b.plop
-    b.plop = 3
-    b.plop
-    b.plop += 4
-    b.plop
-
-    print dir(b)
 # ------------------------------
 # Fin du programme
 # ------------------------------
