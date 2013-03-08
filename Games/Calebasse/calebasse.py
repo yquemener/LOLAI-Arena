@@ -21,13 +21,15 @@ ROUND_TIMEOUT = 0.01
 
 class Calebasse(Game):
     NAME = "Calebasse"
-    def __init__(self, bots):
+    HIST_ATTR = ["account"]
+    def __init__(self, bots, hist_attr = HIST_ATTR):
         """ Initiate Calebasse 
         
         @param bots: list of bots name (str)
+        @param hist_attr: list of attributes with history 
 
         """
-        Game.__init__(self, Calebasse.NAME, bots)
+        Game.__init__(self, Calebasse.NAME, bots,hist_attr )
         
 
         # Initial "money" (100 est arbitraire pour le moment)

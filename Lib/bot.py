@@ -70,7 +70,7 @@ class Bot(object):
         self.proc.stdin.write(msg+"\n")
 
         if DEBUG["send"]:
-            print "Send to bot {bot}: \n\t {msg}".format(bot = self.name, masg = msg)
+            print "Send to bot {bot}: \n\t {msg}".format(bot = self.name, msg = msg)
 
     #TODO: rename get_ans to get_answer!!!
     def get_ans(self):

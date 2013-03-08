@@ -22,16 +22,17 @@ class Game(threading.Thread):
    Meta-class which future games will herites. It defines main caractéristiques of games 
 
     """
-    def __init__(self,name, bots):
+    def __init__(self,name, bots, hist_attr=[]):
         """ Initiate Game 
     
         @param name: Name of the game
         @param folder: folder where the game is
+        @param hist_attr: list of attributes with history
         
         """
         self.check_name(name)
         self.folder = GAMES_PATH + self.game_name
-        self.import_bots(bots)
+        self.import_bots(bots, hist_attr)
         threading.Thread.__init__(self)
         
     def run(self):
@@ -147,17 +148,18 @@ class Game(threading.Thread):
             self.path = GAMES_PATH + self.game_name + "/"
             self.bots_path = self.path + BOTS_PATH
 
-    def import_bots(self, bots):
+    def import_bots(self, bots, hist_attr):
         """ Docstring for import_bots
         
         Import bots which should be in self.bots_path
 
         @param bots: list of bots name
+        @param hist_attr: list of attributes with history
         
         """
         self.bots = [] 
         for b in bots:
-            self.bots += [Bot(b, self.bots_path)]
+            self.bots += [Bot(b, self.bots_path, hist_attr)]
 
     def det_winner(self):
         """ Docstring for det_winner
