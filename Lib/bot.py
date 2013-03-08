@@ -25,20 +25,21 @@ class HistoryData(object):
     
     """
     def __init__(self, attribute, value=None):
-        self.value = value
-        self.history = []
+        if value != None:
+            self.history = [value]
 
     def __get__(self, obj, objtype):
         print "------------------"
         print "Now: {val}".format(val = self.value)
         print "History: {hist}".format(hist = self.history)
-        return self.value
+        return self.history[-1]
 
     def __set__(self, obj, value):
         # Saving old value
         self.history.append(value)
-        # Setting the new one
-        self.value = value
+
+    def get_history(self):
+        return self.history
 
 
 class Bot(object):
