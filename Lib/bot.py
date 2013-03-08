@@ -133,18 +133,14 @@ class Bot(object):
 # ------------------------------
 
 if __name__ == '__main__':
-    b = Bot("shy", "../Games/Calebasse/bots/", ['ble'])
-    print dir(b)
-    #b.ble = HistoryData("ble")
-    print b.ble
+    b = Bot("shy", "../Games/Calebasse/bots/", ['ble', 'farine'])
     print b.__dict__
     b.ble = 2
-    b._ble
-    b.ble
-    b.ble = 3
-    b._ble
-    b.ble += 4
-    b.ble
+    b.farine = 45
+    for i in range(3):
+        b.ble *= (i+1)
+        b.farine += i 
+    print b.__dict__
 # ------------------------------
 # Fin du programme
 # ------------------------------
