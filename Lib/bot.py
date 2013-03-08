@@ -30,7 +30,7 @@ class HistoryData(object):
 
     def __get__(self, obj, objtype):
         print "------------------"
-        print "Now: {val}".format(val = self.value)
+        print "Now: {val}".format(val = self.history[-1])
         print "History: {hist}".format(hist = self.history)
         return self.history[-1]
 
@@ -47,6 +47,8 @@ class Bot(object):
     
     """
 
+    plop = HistoryData('plop', 4)
+
     def __init__(self, name, bots_path, attributes_hist = []):
         """Initiates bot class
 
@@ -58,8 +60,8 @@ class Bot(object):
         self.uuid = str(uuid.uuid4())
         self.score = 0
 
-        for att in attributes_hist:
-            self.__setattr__(att, HistoryData(att))
+        for attr in attributes_hist:
+            setattr(self.__class__ , attr, HistoryData(attr,0))
         
     def check_name(self, name, bots_path):
         """Checks if the name correspond to a folder containing program
@@ -128,8 +130,10 @@ class Bot(object):
 
 if __name__ == '__main__':
     b = Bot("shy", "../Games/Calebasse/bots/", ['ble'])
-    print b
+    print dir(b)
     #b.ble = HistoryData("ble")
+    print b.ble
+    print b.__dict__
     b.ble = 2
     b.ble
     b.ble = 3
@@ -137,6 +141,16 @@ if __name__ == '__main__':
     b.ble += 4
     b.ble
 
+    print b.__dict__
+    print b.plop
+    b.plop = 2
+    b.plop
+    b.plop = 3
+    b.plop
+    b.plop += 4
+    b.plop
+
+    print dir(b)
 # ------------------------------
 # Fin du programme
 # ------------------------------
