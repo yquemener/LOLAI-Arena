@@ -23,8 +23,8 @@ while (playing!='Q'):
     # go to bets
     ready = raw_input()
     while (ready != "Accepted"):
-        # This player gives all he has
-        print int(accounts[uuid]/2)
+        # This player gives all he has (need the +1 otherwise it will stop beting with 1 credit!)
+        print int(accounts[uuid]/2)+1
         ready = raw_input()
         
     # Get bets of everybody
