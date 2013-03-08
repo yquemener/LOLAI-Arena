@@ -89,7 +89,11 @@ class Bot(object):
         return "Bot {name} num: {uuid}".format(name = self.name , uuid = self.uuid)
 
 
-    def add_hist_property(self, attribute):
+    def add_hist_property(self, attribute, doc="Auto-generated method"):
+        """ This attribute begin a property. It will build automaticaly a history
+
+        @param attribute: the name of the attribute
+        """
         # create local setter and getter with a particular attribute name 
         getter = lambda self: self._get_hist_property(attribute)
         setter = lambda self, value: self._set_hist_property(attribute, value)
@@ -97,25 +101,23 @@ class Bot(object):
         # construct property attribute and add it to the class
         setattr(self.__class__, attribute, property(fget=getter, \
                                                     fset=setter, \
-                                                    doc="Auto-generated method"))
+                                                    doc=doc))
         setattr(self, "hist_" + attribute, [])
         # I would like to understand the difference between self and self.__class__ in this example
 
     def _set_hist_property(self, attribute, value):
-        print "--------------------------"
-        print "Setting: %s = %s" %(attribute, value)
+        """ How to set an attribute with an history
+        This value is actually stored in self._attribute but it can be used as any attribute (self.attribute)
+        """
         setattr(self, "_" + attribute, value)    
 
-        print "Add to history ({hist})".format(hist = getattr(self, "hist_"+attribute))
         getattr(self, "hist_"+attribute).append(value)
-        print "History-> {hist}".format(hist = getattr(self, "hist_"+attribute))
-        print self.__dict__
-        print "--------------------------"
 
     def _get_hist_property(self, attribute):
-        print "Getting: %s" %attribute
+        """ How to get an attribute with an history
+        This value is actually stored in self._attribute but it can be used as any attribute (self.attribute)
+        """
         if ("_"+attribute) in self.__dict__:
-            print "It is {val}".format(val=getattr(self,"_"+ attribute))
             return getattr(self,"_"+ attribute)
         else:
             return None
