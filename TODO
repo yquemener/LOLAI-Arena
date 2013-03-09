@@ -2,14 +2,17 @@
 	-> Description of the API
 		{ "game_name" : ... ,
 			"bots": game.bots ,
-			"attr": [attributes], 		# Attributes to diplay (hist_attributes should work)
+			"attributes": [attributes], 		# Attributes to diplay (hist_attributes should work) /!\ thoses attributes needs to be bot's attributes.
 			"plots": [ plots_dict ] }
+		Open questions:
+			* How to display winner?
+			* How to display ordered things?
 	-> Description of plots_dict
-		{"plot_name":... ,
+		{"name":... ,
 			"from_bots": attribute, 	# This for data store in bots /!\ those attributes needs to be historied
 			"datas" : [ datas ]} 		# This if data have been computed by the game or anything else
 	-> Description of datas
-		{"data_name" : ... ,
+		{"name" : ... ,
 			"data": [ data ]} 			
 - Making a debug mode for bots which prints through stderr everything that append
 *(done!) add a way to store data in bot

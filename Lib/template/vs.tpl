@@ -7,37 +7,56 @@
 </head>
 
 <body>
-<h1> LoL Arena </h1>
+<h1> LoL Arena : {{game_name}}</h1>
 
 <h2> {{" vs ".join([b.name for b in bots])}} </h2>
-<p> Résultat: </br>
-%if "score" in bots[1].__dict__:
+%for attr in attributes:
+	<h3> attr </h3>
+	<p>
+	%if attr in bots[1].__dict__:
 		%for b in bots:
-				{{b.name}} : {{b.score}}
-				<p>History: {{b.hist_account}} </p> 
+			{{b.name}} : {{getattr(b,attr)}}
+			<\br>
 		%end
-%end
+	%else:
+		{{attr}} id not an attribute of bots.
+	%end
+	</p>
 <center> And the winner is {{winner}} </center>
 </p>
 
-<div id="container_account" style="width:600px;height:300px;"></div>
+<div id="graphics">
+%for plot in plots:
+	<div id="container_{{plot["name"]}}" style="width:600px;height:300px;"></div>
+%end
+</div>
 
 <p> <a href="/"> Retour à l'arène </a> </p>
-
-    
 </body>
 
 <script>
 // Execute this when the page's finished loading
-var f = Flotr.draw(
-	$('container_account'), [
-%for b in bots:
-	{   data: {{[[i,data] for (i,data) in enumerate(b.hist_account)]}},
-	    label: "{{b.name}}'s cash",
-	    lines: {show: true, fill: true},
-	    points: {show: true}
-	},
-%end	
-]
-);
+%for plot in plots:
+		var f = Flotr.draw(
+				$('container_{{plot["name"]}}'), [
+				%if "from_bots" in plot.keys():
+						%for b in bots:
+						{   data: {{[[i,data] for (i,data) in enumerate(getattr(b,"hist_"+plot["from_bots"]))]}},
+								label: "{{b.name}}'s {{plot["from_bots"]}}",
+								lines: {show: true, fill: true},
+								points: {show: true}
+						},
+						%end
+				%else:
+						%for data in plots['datas']:
+						{   data: {{[[i,d] for (i,d) in enumerate(data["data"])]}},
+								label: "{{data["name"]}}",
+								lines: {show: true, fill: true},
+								points: {show: true}
+						%end
+				%end	
+				]
+		);
+
+%end
 </script>
