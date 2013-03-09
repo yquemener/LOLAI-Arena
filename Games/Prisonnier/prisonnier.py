@@ -11,14 +11,16 @@ ROUND_TIMEOUT = 0.01
 
 class Prisonnier(Game):
     NAME = "Prisonnier"
-    def __init__(self, bots, round=50):
+    HIST_ATTR = ["score"]
+    def __init__(self, bots, round=50, hist_attr = HIST_ATTR):
         """Initialization of the prisonnier
 
         @param bots: list of bots
         @param round: number of round
+        @param hist_attr: list of attributes with history 
 
         """
-        Game.__init__(self, Prisonnier.NAME, bots)
+        Game.__init__(self, Prisonnier.NAME, bots, hist_attr)
         self.round = int(round)
 
     def steady_bots(self):
@@ -91,7 +93,10 @@ class Prisonnier(Game):
         
         """
         self.det_winner()
-        return {'bots': self.bots, 'winner': self.winner}
+
+        plot_score= {"name": "Years in prison", "from_bots": "score"}
+
+		return {'game_name' : self.NAME, 'bots': self.bots, 'winner': self.winner, "attributes" = "score", "plots" = [plot_score]}
 
 
     # -------------------
