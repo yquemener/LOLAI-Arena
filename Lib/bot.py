@@ -12,7 +12,7 @@ import uuid
 # ------------------------------
 # Classes
 # ------------------------------ 
-DEBUG = {"send" : 1}
+DEBUG = {"send" : 0}
 
 class Bot(object):
     """Bot class
