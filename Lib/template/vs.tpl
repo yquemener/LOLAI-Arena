@@ -32,7 +32,7 @@
 var f = Flotr.draw(
 	$('container_account'), [
 %for b in bots:
-	{   data: {{[[i,data] for (i,data) in enumerate(b.hist_account) if i%2]}},
+	{   data: {{[[i,data] for (i,data) in enumerate(b.hist_account)]}},
 	    label: "{{b.name}}'s cash",
 	    lines: {show: true, fill: true},
 	    points: {show: true}
