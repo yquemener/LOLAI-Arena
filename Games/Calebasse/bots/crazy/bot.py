@@ -13,7 +13,6 @@ uuid = raw_input()
 # Ready to start
 print "OK"
 
-
 playing = raw_input()
 while (playing!='Q'):
     # get accounts
