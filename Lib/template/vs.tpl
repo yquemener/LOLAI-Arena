@@ -22,8 +22,7 @@
 		{{attr}} id not an attribute of bots.
 	%end
 	</p>
-<center> And the winner is {{winner}} </center>
-</p>
+%end
 
 <div id="graphics">
 %for plot in plots:
