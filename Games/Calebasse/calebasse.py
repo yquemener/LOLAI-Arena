@@ -21,7 +21,7 @@ ROUND_TIMEOUT = 0.01
 
 class Calebasse(Game):
     NAME = "Calebasse"
-    HIST_ATTR = ["account"]
+    HIST_ATTR = ["account", "bet"]
     def __init__(self, bots, hist_attr = HIST_ATTR):
         """ Initiate Calebasse 
         
@@ -32,7 +32,7 @@ class Calebasse(Game):
         Game.__init__(self, Calebasse.NAME, bots,hist_attr )
         
 
-        # Initial "money" (100 est arbitraire pour le moment)
+        # Initial "money" (100 is arbitrary)
         for b in self.bots:
             b.account = 100
 
@@ -90,33 +90,42 @@ class Calebasse(Game):
                 # Analyse answer
                 res = re.search(bets_pattern, res)
                 if res==None:
-                    bet = 0
+                    b.bet = 0
                 else:
-                    bet = int(res.group())
+                    b.bet = int(res.group())
                 # Can't more than you have
-                wait_for_good_bet = 1 - (bet <= b.account)
-            # Storing bets
-            bets[b.uuid] = bet
-            # takeoff the bet from his account
-            b.account -= bet
+                wait_for_good_bet = 1 - (b.bet <= b.account)
+            # # Storing bets
+            # bets[b.uuid] = bet
+            # # takeoff the bet from his account
+            # b.account -= bet
             b.send_msg("Accepted")
 
+        # Bets values
+        bets = {b.uuid:b.bet for b in self.bots}
+        # Cash price
+        price = sum([b.bet for b in self.bots])
         # Drawing
-        choice = int((1+sum(bets.values())) * random.random())
+        choice = int((1+price) * random.random())
+        # print "---------------------"
+        # print "Price: {price} \t choice = {choice}".format(price = price, choice = choice)
+        winner = 0
         start = 0
-        for uuid in bets.keys():
-            start += bets[uuid]
-            if choice <= start:
-                winner = [b for b in  self.bots if b.uuid==uuid][0]
-                break
-        
-        # Rewarding the winner
-        winner.account += sum(bets.values())
+        for b in self.bots:
+            start += b.bet
+            # print "{name} ({uuid}), start {start}".format(name = b.name, uuid = b.uuid[:5], start = start)
+            if (choice <= start) and not(winner):
+                b.account += price - b.bet
+                winner = b
+            else:
+                b.account -= b.bet
 
         # Sending everything to bots
         for b in self.bots:
             b.send_msg(json.dumps(bets))
             b.send_msg(winner.uuid)
+
+        # print "Winner: {name} ({uuid})".format(name = winner.name, uuid = winner.uuid[:5])
         
 
     def det_winner(self):
