@@ -22,6 +22,8 @@ class Prisonnier(Game):
         """
         Game.__init__(self, Prisonnier.NAME, bots, hist_attr)
         self.round = int(round)
+        for b in self.bots:
+            b.score = 0
 
     def steady_bots(self):
         """Sends to bots the new round message
@@ -93,10 +95,8 @@ class Prisonnier(Game):
         
         """
         self.det_winner()
-
-        plot_score= {"name": "Years in prison", "from_bots": "score"}
-
-		return {'game_name' : self.NAME, 'bots': self.bots, 'winner': self.winner, "attributes" = "score", "plots" = [plot_score]}
+        plot_score = {"name": "Years in prison", "from_bots": "score"}
+        return {'game_name' : self.NAME, 'bots': self.bots, 'winner': self.winner, "attributes" : ["score"], "plots" : [plot_score]}
 
 
     # -------------------
@@ -128,3 +128,7 @@ if __name__ == '__main__':
 
     pass
 
+# -----------------------------
+# Reglages pour 'vim'
+# vim:set autoindent expandtab tabstop=4 shiftwidth=4:
+# cursor: 16 del 
