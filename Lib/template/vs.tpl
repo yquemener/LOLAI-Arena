@@ -11,12 +11,12 @@
 
 <h2> {{" vs ".join([b.name for b in bots])}} </h2>
 %for attr in attributes:
-	<h3> attr </h3>
+	<h3> {{attr}} </h3>
 	<p>
-	%if attr in bots[1].__dict__:
+	%if (("_"+attr) in bots[1].__dict__)  or (attr in bots[1].__dict__):
 		%for b in bots:
 			{{b.name}} : {{getattr(b,attr)}}
-			<\br>
+			</br>
 		%end
 	%else:
 		{{attr}} id not an attribute of bots.
