@@ -149,7 +149,9 @@ class Calebasse(Game):
         plot_accounts = {"name": "Accounts", "from_bots": "account"}
         plot_bets= {"name": "Bets", "from_bots": "bet"}
 
-        return {'game_name' : self.NAME, 'bots': self.bots, 'winner': self.winner, "attributes" : [], "plots" : [plot_accounts, plot_bets]}
+        winner = "The winner is {win}".format(win = self.winner.name)
+
+        return {'game_name' : self.NAME, 'bots': self.bots, "comments" : [winner], "attributes" : [], "plots" : [plot_accounts, plot_bets]}
 
     # --------------------------
     # Few getters
