@@ -1,8 +1,9 @@
 - Making an API for vs template to avoid rewrite a new template each time
-	-> Description of the API
+	-> Description of the API (all keys are needed!!)
 		{ "game_name" : ... ,
 			"bots": game.bots ,
 			"attributes": [attributes], 		# Attributes to diplay (hist_attributes should work) /!\ thoses attributes needs to be bot's attributes.
+			"comments": [comments], 			# list of comments about the game
 			"plots": [ plots_dict ] }
 		Open questions:
 			* How to display winner?

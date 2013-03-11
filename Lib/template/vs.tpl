@@ -10,6 +10,11 @@
 <h1> LoL Arena : {{game_name}}</h1>
 
 <h2> {{" vs ".join([b.name for b in bots])}} </h2>
+
+%for com in comments:
+	<p> {{com}} </p>
+%end
+
 %for attr in attributes:
 	<h3> {{attr}} </h3>
 	<p>
@@ -23,6 +28,7 @@
 	%end
 	</p>
 %end
+
 
 <div id="graphics">
 %for plot in plots:
