@@ -28,7 +28,6 @@ class Bot(object):
         """
         self.check_name(name, bots_path)
         self.uuid = str(uuid.uuid4())
-        self.score = 0
 
         for attr in attributes_hist:
             self.add_hist_property(attr)
