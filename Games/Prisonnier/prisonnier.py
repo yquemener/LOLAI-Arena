@@ -96,7 +96,7 @@ class Prisonnier(Game):
         """
         self.det_winner()
         plot_score = {"name": "Years in prison", "from_bots": "score"}
-        return {'game_name' : self.NAME, 'bots': self.bots, 'winner': self.winner, "attributes" : ["score"], "plots" : [plot_score]}
+        return {'game_name' : self.NAME, 'bots': self.bots, 'comments': [self.winner], "attributes" : ["score"], "plots" : [plot_score]}
 
 
     # -------------------
