@@ -44,27 +44,28 @@ class Player:
 
 class Market(Game):
     NAME = "Market"
-    HIST_ATTR = []
-    def __init__(self, bots, round=300):
+    HIST_ATTR = ["wheat_price", "flour_price"]
+    # Initialization of the constants of the game
+    farm_price = 20
+    mill_price = 85
+    transformation_rate = 1.0
+    growing_cycle = 1
+    flour_bought_each_turn = 50
+    farm_production = 1
+    mill_production = 1
+    flour_max_price = 10
+    farm_cost = 1
+    mill_cost = 1
+
+    def __init__(self, bots, round=300, hist_attr=HIST_ATTR):
         """Initialization of the market game
 
         @param bots: list of bots
         @param round: number of round
 
         """
-        Game.__init__(self, Market.NAME, bots)
+        Game.__init__(self, Market.NAME, bots, hist_attr)
 
-        # Initialization of the constants of the game
-        self.farm_price = 20
-        self.mill_price = 85
-        self.transformation_rate = 1.0
-        self.growing_cycle = 1
-        self.flour_bought_each_turn = 50
-        self.farm_production = 1
-        self.mill_production = 1
-        self.flour_max_price = 10
-        self.farm_cost = 1
-        self.mill_cost = 1
 
         # Initialization of the markets
         self.wheat_market=list()
@@ -84,16 +85,12 @@ class Market(Game):
         self.players_state = dict()
         self.stats_charts = {"flour_price" : [],
                              "wheat_price" : []}
-        self.players_charts = dict()
         self.botsid = dict()
         i = 0
         for b in self.bots:
             botname = b.name+"_"+str(i)
             self.botsid[botname] = b
             self.players_state[botname]=Player(botname)
-            self.players_charts[botname]={"cash":[],
-                                          "wheat":[],
-                                          "flour":[]}
             i+=1
 
 
@@ -135,11 +132,6 @@ class Market(Game):
             # Rules of the game
             self.go()
             # Store stats
-            for bn in self.players_state.keys():
-                pl = self.players_state[bn]
-                self.players_charts[bn]["cash"].append(pl.cash)
-                self.players_charts[bn]["wheat"].append(pl.wheat)
-                self.players_charts[bn]["flour"].append(pl.flour)
             avgf=countf=avgw=countw=0
             for t in self.transactions_done:
                 if t[4]=="f":
@@ -157,8 +149,8 @@ class Market(Game):
                 avgf/=countf
             else:
                 avgf=0
-            self.stats_charts["flour_price"].append(avgf)
-            self.stats_charts["wheat_price"].append(avgw)
+            self.flour_price = avgf
+            self.wheat_price = avgw
 
     def go(self):
         """Rules of the game
@@ -342,11 +334,15 @@ class Market(Game):
         
         """
         self.det_winner()
-        return {'bots': self.bots, 
-                'winner': self.winner, 
-                'states' : self.players_state,
-                'players_charts' : self.players_charts,
-                'stats_charts' : self.stats_charts}
+
+        plot_accounts = {"name": "Accounts", "from_bots": "account"}
+        plot_bets= {"name": "Bets", "from_bots": "bet"}
+
+        winner = "The winner is {win}".format(win = self.winner)
+
+        return {'game_name' : self.NAME, 'bots': self.bots, "comments" : [winner], "attributes" : ["cash"], "plots" : []}
+
+
 
 
 # ----------------------

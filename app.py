@@ -42,7 +42,7 @@ def vs():
     return context
 
 @route('/vsmarket' , method='POST')
-@view(TEMPLATE_PATH + 'vsmarket.tpl')
+@view(TEMPLATE_PATH + 'vs.tpl')
 def vsmarket():
     """  Webpage which sum up the marke game and traces charts"""
     info = request.forms
