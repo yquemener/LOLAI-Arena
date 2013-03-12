@@ -44,6 +44,7 @@ class Player:
 
 class Market(Game):
     NAME = "Market"
+    HIST_ATTR = []
     def __init__(self, bots, round=300):
         """Initialization of the market game
 
